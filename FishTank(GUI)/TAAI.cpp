@@ -19,7 +19,7 @@ void TAAI::play()
         if(getPoint())increaseHealth();
         if(getPoint())increaseSpeed();
     }
-    int d=(~0U>>1),x=0,y=0;
+    int d=(~0U>>1),x,y;
     for(int i=1; i<=N; ++i)
         for(int j=1; j<=M; ++j)
             if(askWhat(i,j)==EMPTY)

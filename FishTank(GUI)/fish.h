@@ -2,7 +2,7 @@
 #define FISH_H
 
 #include "utildef.h"
-#include "env.h"
+#include "SystemThread.h"
 
 class fish
 {
@@ -12,7 +12,7 @@ public:
     virtual void init() = 0;//初始化函数，每一局重新开始将调用
     virtual void play() = 0;//行动函数，每回合行动将调用
     virtual void revive(int&, int&) = 0;//复活时调用，参数传回选择复活位置（若不合法则随机）
-    void setHost(env* system)
+    void setHost(SystemThread* system)
     {
         host = system;
     }
@@ -36,7 +36,7 @@ protected:
     bool increaseSpeed();//增加Speed属性1
 
 private:
-    env* host;
+    SystemThread* host;
 };
 
 #endif

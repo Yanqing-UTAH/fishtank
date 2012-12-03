@@ -62,7 +62,7 @@ int fish::getID()
 
 int fish::askWhat(int x, int y)
 {
-    return host->askWhatF(x, y);
+    return host->askWhat(x, y);
 }
 
 int fish::askHP(int target)

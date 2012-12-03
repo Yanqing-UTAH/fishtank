@@ -3,6 +3,7 @@
 
 #include <wx/wxprec.h>
 #include <wx/wx.h>
+#include <cstdlib>
 
 static const int N = 40; //地图横坐标范围1-N
 static const int M = 40; //地图纵坐标范围1-M
@@ -15,7 +16,7 @@ static const int LEVEL_POINT = 3; //升级能获得的点数
 static const int GAME_ROUND = 500; //游戏回合数
 
 class fish;
-class env;
+class SystemThread;
 
 enum
 {
@@ -27,5 +28,20 @@ enum
     SEND_MSG_ID,
     SEND_STATUS_ID
 };
+
+inline int larger(int a, int b)
+{
+    return a > b ? a : b;
+}
+
+inline int dis(int x1, int y1, int x2, int y2)
+{
+    return (std::abs(x1 - x2) + std::abs(y1 - y2));
+}
+
+inline bool validCor(int x, int y)
+{
+    return ((x >= 1) && (x <= N) && (y >= 1) && (y <= M));
+}
 
 #endif // UTILDEF_H

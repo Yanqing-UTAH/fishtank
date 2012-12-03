@@ -65,10 +65,18 @@
 		<Linker>
 			<Add option="-mthreads" />
 		</Linker>
+		<Unit filename="Events.cpp" />
+		<Unit filename="Events.h" />
+		<Unit filename="FishInfo.cpp" />
+		<Unit filename="FishInfo.h" />
+		<Unit filename="FishTankApp.cpp" />
+		<Unit filename="FishTankApp.h" />
+		<Unit filename="GUIFrame.cpp" />
+		<Unit filename="GUIFrame.h" />
+		<Unit filename="SystemThread.cpp" />
+		<Unit filename="SystemThread.h" />
 		<Unit filename="TAAI.cpp" />
 		<Unit filename="TAAI.h" />
-		<Unit filename="env.cpp" />
-		<Unit filename="env.h" />
 		<Unit filename="fish.cpp" />
 		<Unit filename="fish.h" />
 		<Unit filename="utildef.h" />

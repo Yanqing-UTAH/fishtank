@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_layout_file>
+	<ActiveTarget name="Release" />
+	<File name="Events.cpp" open="1" top="0" tabpos="5">
+		<Cursor position="127" topLine="0" />
+	</File>
+	<File name="Events.h" open="1" top="0" tabpos="4">
+		<Cursor position="1280" topLine="30" />
+	</File>
+	<File name="FishInfo.cpp" open="1" top="0" tabpos="1">
+		<Cursor position="1078" topLine="51" />
+	</File>
+	<File name="FishInfo.h" open="1" top="0" tabpos="12">
+		<Cursor position="64" topLine="0" />
+	</File>
+	<File name="FishTankApp.cpp" open="1" top="0" tabpos="9">
+		<Cursor position="105" topLine="0" />
+	</File>
+	<File name="FishTankApp.h" open="1" top="0" tabpos="8">
+		<Cursor position="214" topLine="0" />
+	</File>
+	<File name="GUIFrame.cpp" open="1" top="0" tabpos="7">
+		<Cursor position="4043" topLine="155" />
+	</File>
+	<File name="GUIFrame.h" open="1" top="0" tabpos="6">
+		<Cursor position="411" topLine="22" />
+	</File>
+	<File name="SystemThread.cpp" open="1" top="0" tabpos="2">
+		<Cursor position="3795" topLine="128" />
+	</File>
+	<File name="SystemThread.h" open="1" top="0" tabpos="3">
+		<Cursor position="578" topLine="24" />
+	</File>
+	<File name="TAAI.h" open="1" top="0" tabpos="14">
+		<Cursor position="0" topLine="0" />
+	</File>
+	<File name="fish.cpp" open="1" top="0" tabpos="10">
+		<Cursor position="789" topLine="54" />
+	</File>
+	<File name="fish.h" open="1" top="0" tabpos="13">
+		<Cursor position="1390" topLine="21" />
+	</File>
+	<File name="utildef.h" open="1" top="0" tabpos="11">
+		<Cursor position="842" topLine="26" />
+	</File>
+</CodeBlocks_layout_file>
