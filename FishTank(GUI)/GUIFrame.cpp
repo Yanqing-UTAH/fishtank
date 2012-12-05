@@ -1,85 +1,58 @@
 #include "GUIFrame.h"
 
-BEGIN_EVENT_TABLE(FishTankFrame, wxFrame)
-    EVT_MENU(wxID_EXIT, FishTankFrame::OnQuit)
-    EVT_MENU(wxID_ABOUT, FishTankFrame::OnAbout)
-    EVT_PAINT(FishTankFrame::OnPaint)
-    EVT_BUTTON(START_ID, FishTankFrame::OnStart)
-    EVT_BUTTON(PAUSE_ID, FishTankFrame::OnPause)
-    EVT_BUTTON(RESUME_ID, FishTankFrame::OnResume)
-    EVT_BUTTON(RESET_ID, FishTankFrame::OnReset)
-    EVT_SET_MAP(SET_MAP_ID, FishTankFrame::OnSetMap)
-    EVT_SEND_MSG(SEND_MSG_ID, FishTankFrame::OnSendMsg)
-    EVT_SEND_STATUS(SEND_STATUS_ID, FishTankFrame::OnSendStatus)
+BEGIN_EVENT_TABLE(GUIFrame, wxFrame)
+    EVT_MENU(wxID_EXIT, GUIFrame::OnQuit)
+    EVT_MENU(wxID_ABOUT, GUIFrame::OnAbout)
+    EVT_PAINT(GUIFrame::OnPaint)
+    EVT_MENU(START_ID, GUIFrame::OnStart)
+    EVT_MENU(PAUSE_ID, GUIFrame::OnPause)
+    EVT_MENU(RESUME_ID, GUIFrame::OnResume)
+    EVT_MENU(RESET_ID, GUIFrame::OnReset)
+    EVT_SET_MAP(SET_MAP_ID, GUIFrame::OnSetMap)
+    EVT_SEND_STATUS(SEND_STATUS_ID, GUIFrame::OnSendStatus)
+    EVT_CLOSE(GUIFrame::OnClose)
 END_EVENT_TABLE()
 
-FishTankFrame::FishTankFrame(const wxString& title, const wxPoint& pos, const wxSize& size, long style)
+GUIFrame::GUIFrame(const wxString& title, const wxPoint& pos, const wxSize& size, long style)
     :wxFrame((wxFrame*)NULL, -1, title, pos, size, style)
 {
-    SetIcon(wxICON(wxWidgets));
+    CreateStatusBar();
+    SetStatusText(wxT("FishTank System Ready"));
+
     wxMenu* menuFile = new wxMenu;
-    menuFile -> Append(wxID_EXIT, wxT("E&xit"), wxT("Quit"));
+    menuFile -> Append(START_ID, wxT("&Start\tCtrl-S"), wxT("Start a new game"));
+    menuFile -> Append(PAUSE_ID, wxT("&Pause\tCtrl-P"), wxT("Pause current game"));
+    menuFile -> Append(RESUME_ID, wxT("&Resume\tCtrl-R"), wxT("Resume current game"));
+    menuFile -> Append(RESET_ID, wxT("R&eset\tCtrl-E"), wxT("Reset the game"));
+    menuFile -> AppendSeparator();
+    menuFile -> Append(wxID_EXIT, wxT("E&xit\tAlt-X"), wxT("Quit"));
     wxMenu* menuHelp = new wxMenu;
-    menuHelp -> Append(wxID_ABOUT, wxT("&About..."), wxT("Shou about dialog"));
+    menuHelp -> Append(wxID_ABOUT, wxT("&About...\tCtrl-A"), wxT("Shou about dialog"));
 
     wxMenuBar* menuBar = new wxMenuBar;
     menuBar -> Append(menuFile, wxT("&File"));
     menuBar -> Append(menuHelp, wxT("&Help"));
     SetMenuBar(menuBar);
 
-    wxBoxSizer* bSizer1 = new wxBoxSizer(wxHORIZONTAL);
-    wxStaticBoxSizer* bSizer = new wxStaticBoxSizer(new wxStaticBox(this, wxID_ANY, wxT("Game Control")), wxHORIZONTAL);
-    bSizer1->Add(BoardLength + BoardX, BoardLength + BoardY * 3);
-    BtnStart = new wxButton(this, START_ID, wxT("&Start"), wxDefaultPosition, wxDefaultSize, 0);
-    bSizer->Add(BtnStart, 0, wxALL, 5);
-    BtnPause = new wxButton(this, PAUSE_ID, wxT("&Pause"), wxDefaultPosition, wxDefaultSize, 0);
-    bSizer->Add(BtnPause, 0, wxALL, 5);
-    BtnResume = new wxButton(this, RESUME_ID, wxT("&Resume"), wxDefaultPosition, wxDefaultSize, 0);
-    bSizer->Add(BtnResume, 0, wxALL, 5);
-    BtnReset = new wxButton(this, RESET_ID, wxT("R&eset"), wxDefaultPosition, wxDefaultSize, 0);
-    bSizer->Add(BtnReset, 0, wxALL, 5);
-
-    m_txtctrl = new wxTextCtrl(this, wxID_ANY, "",
-                               wxDefaultPosition, wxSize(400, 510),
-                               wxTE_MULTILINE | wxTE_READONLY);
-
-    wxFont font(wxNORMAL_FONT->GetPointSize(), wxFONTFAMILY_TELETYPE,
-                wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
-
-    m_txtctrl->SetFont(font);
-
-    m_txtctrl->SetFocus();
-
-    wxBoxSizer* bSizer2 = new wxBoxSizer(wxVERTICAL);
-
-    bSizer2->Add(bSizer, 0, wxALL, 10);
-    bSizer2->Add(m_txtctrl, 0, wxALL, 10);
-
-    bSizer1->Add(bSizer2, 0, wxEXPAND, 5);
-    SetSizer(bSizer1);
+    wxBoxSizer* sizer = new wxBoxSizer(wxVERTICAL);
+    sizer->Add(BoardLength + (BoardX << 1), BoardLength + (BoardY << 1));
+    SetSizer(sizer);
     Layout();
-    bSizer1->Fit(this);
+    sizer->Fit(this);
 
-    BtnStart->Enable(true);
-    BtnPause->Enable(false);
-    BtnResume->Enable(false);
-    BtnReset->Enable(false);
-
-    CreateStatusBar();
-    SetStatusText(wxT("FishTank System Ready"));
 }
 
-void FishTankFrame::OnQuit(wxCommandEvent& WXUNUSED(event))
+void GUIFrame::OnQuit(wxCommandEvent& WXUNUSED(event))
 {
     Close(true);
 }
 
-void FishTankFrame::OnAbout(wxCommandEvent& WXUNUSED(event))
+void GUIFrame::OnAbout(wxCommandEvent& WXUNUSED(event))
 {
-    wxMessageBox(wxT("This is the GUI system of FishTank made by Ianking Penn"), wxT("About AISystem"), wxOK | wxICON_INFORMATION);
+    wxMessageBox(wxT("Big Homework of 2012 ACM Class\nThis is the GUI system of FishTank made by Ianking Penn\nThanks to wxWidgets"), wxT("About AISystem"), wxOK | wxICON_INFORMATION);
 }
 
-void FishTankFrame::OnPaint(wxPaintEvent& event)
+void GUIFrame::OnPaint(wxPaintEvent& event)
 {
     wxPaintDC dc(this);
     dc.SetPen(*wxBLACK_PEN);
@@ -106,73 +79,43 @@ void FishTankFrame::OnPaint(wxPaintEvent& event)
     for (int i = 1; i <= N; ++i)
         for (int j = 1; j <= M; ++j)
         {
-            wxSetMapEvent* event = new wxSetMapEvent(i, j, wxGetApp().data->askWhat(i, j));
+            wxSetMapEvent* event = new wxSetMapEvent(i, j, ((FishTankApp*)wxTheApp)->data->askWhat(i, j));
             OnSetMap(*event);
         }*/
 }
 
-void FishTankFrame::OnStart(wxCommandEvent& WXUNUSED(event))
+void GUIFrame::OnStart(wxCommandEvent& WXUNUSED(event))
 {
-    if (!thread)
-        thread = CreateThread();
-    BtnStart->Enable(false);
-    BtnPause->Enable(true);
-    BtnResume->Enable(false);
-    BtnReset->Enable(true);
+    ((FishTankApp*)wxTheApp)->thread->Run();
+    //thread -> Run();
 }
 
-void FishTankFrame::OnPause(wxCommandEvent& WXUNUSED(event))
+void GUIFrame::OnPause(wxCommandEvent& WXUNUSED(event))
 {
-    if (thread)
-        if (thread->IsRunning())
-            thread -> Pause();
-    BtnPause->Enable(false);
-    BtnResume->Enable(true);
+    if (((FishTankApp*)wxTheApp)->thread->IsRunning())
+        ((FishTankApp*)wxTheApp)->thread->Pause();
 }
 
-void FishTankFrame::OnResume(wxCommandEvent& WXUNUSED(event))
+void GUIFrame::OnResume(wxCommandEvent& WXUNUSED(event))
 {
-    if (thread)
-        if (thread->IsPaused())
-            thread -> Resume();
-    BtnPause->Enable(true);
-    BtnResume->Enable(false);
+    if (((FishTankApp*)wxTheApp)->thread->IsPaused())
+        ((FishTankApp*)wxTheApp)->thread->Resume();
 }
 
-void FishTankFrame::OnReset(wxCommandEvent& WXUNUSED(event))
+void GUIFrame::OnReset(wxCommandEvent& WXUNUSED(event))
 {
-    thread->Kill();
-    thread = 0;
-    BtnStart->Enable(true);
-    BtnPause->Enable(false);
-    BtnResume->Enable(false);
-    BtnReset->Enable(false);
-    m_txtctrl->Clear();
+    //thread->Kill();
+    //thread = 0;
+    //myWatcher->m_txtctrl->Clear();
     Refresh();
 }
 
-SystemThread *FishTankFrame::CreateThread()
-{
-    SystemThread *thread = new SystemThread();
-    if ( thread->Create() != wxTHREAD_NO_ERROR )
-    {
-        wxLogError(wxT("Can't create thread!"));
-    }
-    thread->Run();
-    return thread;
-}
-
-void FishTankFrame::OnSendMsg(wxSendMsgEvent& event)
-{
-    m_txtctrl->AppendText(event.GetMsg() + '\n');
-}
-
-void FishTankFrame::OnSendStatus(wxSendMsgEvent& event)
+void GUIFrame::OnSendStatus(wxSendMsgEvent& event)
 {
     SetStatusText(event.GetMsg() + '\n');
 }
 
-void FishTankFrame::OnSetMap(wxSetMapEvent& event)
+void GUIFrame::OnSetMap(wxSetMapEvent& event)
 {
     wxClientDC dc(this);
     const int W = BoardLength / (wxMax(N, M) + 2);
@@ -195,4 +138,10 @@ void FishTankFrame::OnSetMap(wxSetMapEvent& event)
         dc.DrawCircle(BoardX + W * event.GetX() + W / 2, BoardY + W * event.GetY() + W / 2, W * 5 / 12);
         dc.DrawText(wxString::Format("%d", event.GetTarget()), wxPoint(BoardX + W * event.GetX() + W / 8, BoardY + W * event.GetY() + W / 8));
     }
+}
+
+void GUIFrame::OnClose(wxCloseEvent& event)
+{
+    ((FishTankApp*)wxTheApp) -> watcher -> Destroy();
+    Destroy();
 }

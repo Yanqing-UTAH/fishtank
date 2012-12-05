@@ -6,9 +6,16 @@ IMPLEMENT_APP(FishTankApp)
 
 bool FishTankApp::OnInit()
 {
-    frame = new FishTankFrame(wxT("FishTank system"), wxDefaultPosition, wxGetDisplaySize(), wxMINIMIZE_BOX | wxCLOSE_BOX | wxCAPTION | wxCLIP_CHILDREN | wxFULL_REPAINT_ON_RESIZE);
-    frame -> Show(true);
     data = new FishInfo();
+    frame = new GUIFrame(wxT("FishTank system"), wxDefaultPosition, wxDefaultSize, wxMINIMIZE_BOX | wxCLOSE_BOX | wxCAPTION | wxCLIP_CHILDREN | wxFULL_REPAINT_ON_RESIZE);
+    frame -> Show(true);
+    watcher = new WatcherFrame(data, wxT("FishTank Watcher"), wxDefaultPosition, wxDefaultSize, wxMINIMIZE_BOX | wxCAPTION | wxCLIP_CHILDREN);
+    watcher -> Show(true);
+    thread = new SystemThread();
+    if ( thread->Create() != wxTHREAD_NO_ERROR )
+    {
+        wxLogError(wxT("Can't create thread!"));
+    }
     SetTopWindow(frame);
     return true;
 }

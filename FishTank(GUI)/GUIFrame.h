@@ -4,15 +4,14 @@
 #include "utildef.h"
 #include "Events.h"
 #include "FishTankApp.h"
-#include "SystemThread.h"
 
-class FishTankFrame: public wxFrame
+class GUIFrame: public wxFrame
 {
 public:
-    FishTankFrame(const wxString& title,
-                    const wxPoint& pos = wxDefaultPosition,
-                    const wxSize& size = wxDefaultSize,
-                    long style = wxDEFAULT_FRAME_STYLE);
+    GUIFrame(const wxString& title,
+             const wxPoint& pos = wxDefaultPosition,
+             const wxSize& size = wxDefaultSize,
+             long style = wxDEFAULT_FRAME_STYLE);
     void OnQuit(wxCommandEvent& event);
     void OnAbout(wxCommandEvent& event);
     void OnStart(wxCommandEvent& event);
@@ -23,14 +22,8 @@ public:
     void OnSendMsg(wxSendMsgEvent& event);
     void OnSendStatus(wxSendMsgEvent& event);
     void OnPaint(wxPaintEvent& event);
-    SystemThread* CreateThread();
-    wxButton* BtnStart;
-    wxButton* BtnPause;
-    wxButton* BtnResume;
-    wxButton* BtnReset;
-    wxTextCtrl *m_txtctrl;
+    void OnClose(wxCloseEvent& event);
 private:
-    SystemThread* thread;
     static const int BoardLength = 600;
     static const int BoardX = 15;
     static const int BoardY = 15;

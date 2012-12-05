@@ -1,12 +1,13 @@
 # depslib dependency file v1.0
-1354538427 source:e:\fishtank(gui)\fishinfo.cpp
+1354628639 source:e:\fishtank(gui)\fishinfo.cpp
 	"FishInfo.h"
 	"Events.h"
+	"FishTankApp.h"
 
-1354538278 e:\fishtank(gui)\fishinfo.h
+1354601971 e:\fishtank(gui)\fishinfo.h
 	"utildef.h"
 
-1354538494 e:\fishtank(gui)\utildef.h
+1354629903 e:\fishtank(gui)\utildef.h
 	<wx/wxprec.h>
 	<wx/wx.h>
 	<cstdlib>
@@ -2125,47 +2126,46 @@
 
 1341884472 c:\wxwidgets\include\wx\osx\mdi.h
 
-1354543270 e:\fishtank(gui)\events.h
+1354640643 e:\fishtank(gui)\events.h
 	"utildef.h"
 
-1354543357 source:e:\fishtank(gui)\fishtankapp.cpp
+1354639482 source:e:\fishtank(gui)\fishtankapp.cpp
 	"FishTankApp.h"
 	"GUIFrame.h"
 
-1354541961 e:\fishtank(gui)\fishtankapp.h
+1354627392 e:\fishtank(gui)\fishtankapp.h
 	"utildef.h"
 	"FishInfo.h"
+	"WatcherFrame.h"
+	"SystemThread.h"
 
-1354539094 e:\fishtank(gui)\guiframe.h
+1354639033 e:\fishtank(gui)\guiframe.h
 	"utildef.h"
 	"Events.h"
 	"FishTankApp.h"
-	"SystemThread.h"
 
-1354542464 e:\fishtank(gui)\systemthread.h
+1354627268 e:\fishtank(gui)\systemthread.h
 	"utildef.h"
 	"FishInfo.h"
 	"Events.h"
 	"wx/button.h"
 
-1354540896 source:e:\fishtank(gui)\guiframe.cpp
+1354638995 source:e:\fishtank(gui)\guiframe.cpp
 	"GUIFrame.h"
 
-1354543613 source:e:\fishtank(gui)\systemthread.cpp
+1354629928 source:e:\fishtank(gui)\systemthread.cpp
 	"SystemThread.h"
 	"FishTankApp.h"
 	"fish.h"
 	<cstdlib>
 	<ctime>
-	<iostream>
-	<iomanip>
 	"TAAI.h"
 
 1354538518 e:\fishtank(gui)\fish.h
 	"utildef.h"
 	"SystemThread.h"
 
-1353139483 e:\fishtank(gui)\taai.h
+1354629932 e:\fishtank(gui)\taai.h
 	"fish.h"
 	"cstdlib"
 
@@ -2178,4 +2178,138 @@
 
 1354543252 source:e:\fishtank(gui)\events.cpp
 	"Events.h"
+
+1353511080 source:e:\fishtank(gui)\st20.cpp
+	"st20.h"
+	<cstdlib>
+
+1353511080 e:\fishtank(gui)\st20.h
+	"fish.h"
+	<map>
+	<vector>
+
+1353408557 source:e:\fishtank(gui)\st31.cpp
+	"st31.h"
+	<cstdlib>
+	<cmath>
+	<cstring>
+	<algorithm>
+	<vector>
+	<iostream>
+
+1353120600 e:\fishtank(gui)\st31.h
+	"fish.h"
+
+1353389199 source:e:\fishtank(gui)\st32.cpp
+	"fish.h"
+	"st32.h"
+	"cstring"
+	<cstdlib>
+
+1353389200 e:\fishtank(gui)\st32.h
+	"fish.h"
+
+1353743891 source:e:\fishtank(gui)\st34.cpp
+	"st34.h"
+
+1353509950 e:\fishtank(gui)\st34.h
+	"fish.h"
+	<cstdlib>
+
+1353068745 source:e:\fishtank(gui)\st35.cpp
+	"st35.h"
+	<cstdlib>
+
+1353054780 e:\fishtank(gui)\st35.h
+	"fish.h"
+	"cstdlib"
+
+1353430651 e:\fishtank(gui)\st06.h
+	"fish.h"
+	<cstdlib>
+	<cmath>
+	<algorithm>
+	<cstring>
+	<ctime>
+	<fstream>
+	<iomanip>
+	<iostream>
+
+1353054208 e:\fishtank(gui)\st26.h
+	"fish.h"
+
+1353420217 e:\fishtank(gui)\st26(sp).h
+	"fish.h"
+	<algorithm>
+
+1354640028 source:e:\fishtank(gui)\watcherframe.cpp
+	"WatcherFrame.h"
+
+1354639432 e:\fishtank(gui)\watcherframe.h
+	"utildef.h"
+	"Events.h"
+	"FishInfo.h"
+	"wx/listctrl.h"
+	"wx/notebook.h"
+
+1354622715 e:\fishtank(gui)\watcherthread.h
+	"utildef.h"
+	"WatcherFrame.h"
+
+1354623582 source:e:\fishtank(gui)\watcherthread.cpp
+	"WatcherThread.h"
+
+1341884458 c:\wxwidgets\include\wx\notebook.h
+	"wx/defs.h"
+	"wx/bookctrl.h"
+	"wx/univ/notebook.h"
+	"wx/msw/notebook.h"
+	"wx/generic/notebook.h"
+	"wx/gtk/notebook.h"
+	"wx/gtk1/notebook.h"
+	"wx/osx/notebook.h"
+	"wx/cocoa/notebook.h"
+	"wx/os2/notebook.h"
+
+1341884484 c:\wxwidgets\include\wx\bookctrl.h
+	"wx/defs.h"
+	"wx/control.h"
+	"wx/dynarray.h"
+	"wx/withimages.h"
+	"wx/notebook.h"
+	"wx/choicebk.h"
+
+1341884454 c:\wxwidgets\include\wx\withimages.h
+	"wx/defs.h"
+	"wx/icon.h"
+	"wx/imaglist.h"
+
+1341884458 c:\wxwidgets\include\wx\choicebk.h
+	"wx/defs.h"
+	"wx/bookctrl.h"
+	"wx/choice.h"
+	"wx/containr.h"
+
+1341884452 c:\wxwidgets\include\wx\univ\notebook.h
+	"wx/arrstr.h"
+
+1341884462 c:\wxwidgets\include\wx\msw\notebook.h
+	"wx/control.h"
+
+1341884480 c:\wxwidgets\include\wx\generic\notebook.h
+	"wx/event.h"
+	"wx/control.h"
+
+1341884472 c:\wxwidgets\include\wx\osx\notebook.h
+	"wx/event.h"
+
+1341884342 e:\fishtank(gui)\copy.xpm
+
+1341884442 e:\fishtank(gui)\info.xpm
+
+1341884340 e:\fishtank(gui)\quit.xpm
+
+1341884442 e:\fishtank(gui)\stop.xpm
+
+1341884442 e:\fishtank(gui)\play.xpm
 

@@ -5,9 +5,10 @@
 #include "cstdlib"
 
 
-class TAAI:virtual public fish{
+class TAAI:virtual public fish
+{
 
-    public:
+public:
     void init();
 
     void play();

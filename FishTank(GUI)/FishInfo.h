@@ -6,6 +6,8 @@
 class FishInfo
 {
 public:
+    FishInfo();
+    ~FishInfo();
     int getPoint(int) const;
     int getLevel(int) const;
     int getExp(int) const;
@@ -42,6 +44,9 @@ private:
     int fishKill[MAX_PLAYER+1];
     int fishDie[MAX_PLAYER+1];
     int fishRank[MAX_PLAYER+1];
+
+private:
+    wxMutex* lock;
 };
 
 #endif // FISHINFO_H

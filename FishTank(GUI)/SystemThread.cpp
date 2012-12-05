@@ -4,8 +4,6 @@
 
 #include <cstdlib>
 #include <ctime>
-#include <iostream>
-#include <iomanip>
 #include "TAAI.h"
 
 using namespace std;
@@ -22,7 +20,7 @@ wxThread::ExitCode SystemThread::Entry()
     return NULL;
 }
 
-SystemThread::SystemThread() : data(((FishTankApp*)wxTheApp)->data), evtHandler(((FishTankApp*)wxTheApp)->frame->GetEventHandler())
+SystemThread::SystemThread() : data(((FishTankApp*)wxTheApp)->data), evtHandler(((FishTankApp*)wxTheApp)->watcher->GetEventHandler())
 {
     init();
 }
@@ -32,6 +30,7 @@ void SystemThread::init()
     fishNum = 0;
     reviveNum = 0;
     phase = INIT_PHASE;
+    round = 0;
     for (int i = 1; i <= N; ++i)
         for (int j = 1; j <= M; ++j)
             data->setMap(i, j, EMPTY);
@@ -66,7 +65,7 @@ void SystemThread::foodRefresh()
         randXY(x, y);
         data->setMap(x, y, FOOD);
     }
-    //evtHandler->QueueEvent(new wxSendMsgEvent(wxString::Format("Food refreshed"), wxEVT_SEND_MSG, SEND_MSG_ID));
+    evtHandler->QueueEvent(new wxSendMsgEvent(wxString::Format("Food refreshed"), wxEVT_SEND_MSG, SEND_MSG_ID));
 }
 
 void SystemThread::fishInit()
@@ -136,7 +135,6 @@ void SystemThread::fishPlay()
             evtHandler->QueueEvent(new wxSendMsgEvent(wxString::Format("Fish %d is in action now", current), wxEVT_SEND_MSG, SEND_MSG_ID));
             evtHandler->QueueEvent(new wxSendMsgEvent(wxString::Format("Fish %d is in action now", current), wxEVT_SEND_STATUS, SEND_STATUS_ID));
             player[current]->play();
-            Sleep(100);
         }
     }
 }
@@ -144,7 +142,14 @@ void SystemThread::fishPlay()
 void SystemThread::play()
 {
     fishInit();
-    for (int round = 1; round <= GAME_ROUND; ++round)
+    while (round <= GAME_ROUND)
+        turn();
+    printResult();
+}
+
+void SystemThread::turn()
+{
+    if (++round <= GAME_ROUND)
     {
         evtHandler->QueueEvent(new wxSendMsgEvent(wxString::Format("Round: %d", round), wxEVT_SEND_MSG, SEND_MSG_ID));
         if (round % 5 == 1)
@@ -153,7 +158,6 @@ void SystemThread::play()
         calcPriority();
         fishPlay();
     }
-    printResult();
 }
 
 bool SystemThread::move(int x, int y)
@@ -252,7 +256,7 @@ void SystemThread::increaseHP(int value)
         HP = getMaxHP();
     data->setHP(current, HP);
     if (phase != INIT_PHASE)
-    evtHandler->QueueEvent(new wxSendMsgEvent(wxString::Format("Fish %d's HP increases to %d", current, HP), wxEVT_SEND_MSG, SEND_MSG_ID));
+        evtHandler->QueueEvent(new wxSendMsgEvent(wxString::Format("Fish %d's HP increases to %d", current, HP), wxEVT_SEND_MSG, SEND_MSG_ID));
 }
 
 void SystemThread::decreaseHP(int target, int value)
@@ -291,7 +295,7 @@ bool SystemThread::increaseHealth()
         increaseHP(2);
         data->setPoint(current, getPoint() - 1);
         if (phase != INIT_PHASE)
-        evtHandler->QueueEvent(new wxSendMsgEvent(wxString::Format("Fish %d's MaxHP increases to %d", current, getMaxHP()), wxEVT_SEND_MSG, SEND_MSG_ID));
+            evtHandler->QueueEvent(new wxSendMsgEvent(wxString::Format("Fish %d's MaxHP increases to %d", current, getMaxHP()), wxEVT_SEND_MSG, SEND_MSG_ID));
         return true;
     }
     return false;
@@ -304,7 +308,7 @@ bool SystemThread::increaseStrength()
         data->setAtt(current, getAtt() + 1);
         data->setPoint(current, getPoint() - 1);
         if (phase != INIT_PHASE)
-        evtHandler->QueueEvent(new wxSendMsgEvent(wxString::Format("Fish %d's Strength increases to %d", current, getAtt()), wxEVT_SEND_MSG, SEND_MSG_ID));
+            evtHandler->QueueEvent(new wxSendMsgEvent(wxString::Format("Fish %d's Strength increases to %d", current, getAtt()), wxEVT_SEND_MSG, SEND_MSG_ID));
         return true;
     }
     return false;
@@ -317,7 +321,7 @@ bool SystemThread::increaseSpeed()
         data->setSp(current, getSp() + 1);
         data->setPoint(current, getPoint() - 1);
         if (phase != INIT_PHASE)
-        evtHandler->QueueEvent(new wxSendMsgEvent(wxString::Format("Fish %d's Speed increases to %d", current, getSp()), wxEVT_SEND_MSG, SEND_MSG_ID));
+            evtHandler->QueueEvent(new wxSendMsgEvent(wxString::Format("Fish %d's Speed increases to %d", current, getSp()), wxEVT_SEND_MSG, SEND_MSG_ID));
         return true;
     }
     return false;
@@ -376,15 +380,16 @@ void SystemThread::randXY(int& x, int& y)
 }
 
 void SystemThread::printResult()
-{/*
-    for (int i = 1; i <= fishNum; ++i)
-        fishRank[i] = i;
-    cout << "ID Score  Lv   HP MaxHP  Sp Att Kill Die" << endl;
-    for (int j = 1; j <= fishNum; ++j)
-    {
-        int i = fishRank[j];
-        cout << setw(3) << i << setw(5) << fishExp[i] + fishBonus[i] << setw(4) << fishLevel[i] << setw(5) << fishHP[i] << setw(6) << fishMaxHP[i] << setw(4) << fishSp[i] << setw(4) << fishAtt[i] << setw(5) << fishKill[i] << setw(4) << fishDie[i] << endl;
-    }*/
+{
+    /*
+       for (int i = 1; i <= fishNum; ++i)
+           fishRank[i] = i;
+       cout << "ID Score  Lv   HP MaxHP  Sp Att Kill Die" << endl;
+       for (int j = 1; j <= fishNum; ++j)
+       {
+           int i = fishRank[j];
+           cout << setw(3) << i << setw(5) << fishExp[i] + fishBonus[i] << setw(4) << fishLevel[i] << setw(5) << fishHP[i] << setw(6) << fishMaxHP[i] << setw(4) << fishSp[i] << setw(4) << fishAtt[i] << setw(5) << fishKill[i] << setw(4) << fishDie[i] << endl;
+       }*/
 }
 
 int SystemThread::getPoint() const

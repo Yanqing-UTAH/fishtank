@@ -77,6 +77,8 @@
 		<Unit filename="SystemThread.h" />
 		<Unit filename="TAAI.cpp" />
 		<Unit filename="TAAI.h" />
+		<Unit filename="WatcherFrame.cpp" />
+		<Unit filename="WatcherFrame.h" />
 		<Unit filename="fish.cpp" />
 		<Unit filename="fish.h" />
 		<Unit filename="utildef.h" />

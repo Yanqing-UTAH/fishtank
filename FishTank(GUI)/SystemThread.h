@@ -16,6 +16,7 @@ public:
 
     bool addAI(fish*);
     void play();
+    void turn();
 
 private:
     void foodRefresh();
@@ -40,6 +41,7 @@ private:
     int reviveNum;
 
     int phase;
+    int round;
 
     enum
     {
