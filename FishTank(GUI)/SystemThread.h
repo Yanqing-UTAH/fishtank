@@ -19,6 +19,7 @@ public:
     void turn();
 
 private:
+    void SendLog(const wxString& str);
     void foodRefresh();
     bool sortCmp(int, int) const;
     void sort(int, int);
@@ -35,7 +36,6 @@ private:
 private:
     int current;
     fish* player[MAX_PLAYER+1];
-    int fishNum;
 
     int reviveList[MAX_PLAYER+1];
     int reviveNum;

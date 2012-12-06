@@ -15,13 +15,15 @@ public:
                  const wxPoint& pos = wxDefaultPosition,
                  const wxSize& size = wxDefaultSize,
                  long style = wxDEFAULT_FRAME_STYLE);
-    void OnSendMsg(wxSendMsgEvent& event);
+    void OnSendMsg(wxCommandEvent& event);
     void OnClose(wxCloseEvent& event);
+    void Refresh();
     //void OnChangeData(wxChangeDataEvent& event);
     SystemThread* CreateThread();
     wxTextCtrl *txtctrl;
     wxListCtrl* list;
 private:
+    //int wxCALLBACK SortCmp(wxIntPtr, wxIntPtr, wxIntPtr);
     FishInfo* const data;
 protected:
     DECLARE_EVENT_TABLE()

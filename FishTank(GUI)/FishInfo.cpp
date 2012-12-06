@@ -9,6 +9,14 @@ FishInfo::~FishInfo()
     delete lock;
 }
 
+void FishInfo::init()
+{
+    fishCount = 0;
+    for (int i = 1; i <= N; ++i)
+        for (int j = 1; j <= M; ++j)
+            setMap(i, j, EMPTY);
+}
+
 int FishInfo::getPoint(int target) const
 {
     wxMutexLocker locker(*lock);
@@ -63,6 +71,17 @@ int FishInfo::getSp(int target) const
     return fishSp[target];
 }
 
+int FishInfo::getScore(int target) const
+{
+    wxMutexLocker locker(*lock);
+    return fishScore[target];
+}
+
+int FishInfo::getFishCount() const
+{
+    return fishCount;
+}
+
 int FishInfo::askWhat(int x, int y) const
 {
     wxMutexLocker locker(*lock);
@@ -75,7 +94,7 @@ void FishInfo::setMap(int x, int y, int target)
     if (validCor(x, y))
     {
         map[x][y] = target;
-        wxSetMapEvent* event = new wxSetMapEvent(x, y, target, wxEVT_SET_MAP, SET_MAP_ID);
+        wxSetMapEvent* event = new wxSetMapEvent(x, y, wxEVT_SET_MAP, SET_MAP_ID);
         ((FishTankApp*)wxTheApp)->frame->GetEventHandler()->QueueEvent(event);
     }
 }
@@ -127,4 +146,15 @@ void FishInfo::setPoint(int target, int value)
 {
     wxMutexLocker locker(*lock);
     fishPoint[target] = value;
+}
+
+void FishInfo::setScore(int target, int value)
+{
+    wxMutexLocker locker(*lock);
+    fishScore[target] = value;
+}
+
+void FishInfo::addFish()
+{
+    ++fishCount;
 }

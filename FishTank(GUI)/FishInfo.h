@@ -17,6 +17,8 @@ public:
     int getMaxHP(int) const;
     int getAtt(int) const;
     int getSp(int) const;
+    int getScore(int) const;
+    int getFishCount() const;
     int askWhat(int, int) const;
 
     void setMap(int, int, int);
@@ -28,6 +30,9 @@ public:
     void setMaxHP(int, int);
     void setAtt(int, int);
     void setSp(int, int);
+    void setScore(int, int);
+    void addFish();
+    void init();
 
 private:
     int map[N+1][M+1];
@@ -40,10 +45,11 @@ private:
     int fishMaxHP[MAX_PLAYER+1];
     int fishAtt[MAX_PLAYER+1];
     int fishSp[MAX_PLAYER+1];
-    int fishBonus[MAX_PLAYER+1];
+    int fishScore[MAX_PLAYER+1];
     int fishKill[MAX_PLAYER+1];
     int fishDie[MAX_PLAYER+1];
     int fishRank[MAX_PLAYER+1];
+    int fishCount;
 
 private:
     wxMutex* lock;

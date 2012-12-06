@@ -9,7 +9,7 @@ BEGIN_EVENT_TABLE(GUIFrame, wxFrame)
     EVT_MENU(RESUME_ID, GUIFrame::OnResume)
     EVT_MENU(RESET_ID, GUIFrame::OnReset)
     EVT_SET_MAP(SET_MAP_ID, GUIFrame::OnSetMap)
-    EVT_SEND_STATUS(SEND_STATUS_ID, GUIFrame::OnSendStatus)
+    EVT_COMMAND(SEND_SB_ID, wxEVT_SEND_SB, GUIFrame::OnSendStatusBar)
     EVT_CLOSE(GUIFrame::OnClose)
 END_EVENT_TABLE()
 
@@ -74,20 +74,15 @@ void GUIFrame::OnPaint(wxPaintEvent& event)
         if (i % 5 == 0)
             dc.DrawText(wxString::Format("%d", i), wxPoint(BoardX + (i < 10 ? W * 3 / 8 : 0), BoardY + i * W));
         dc.DrawLine(BoardX + W, BoardY + i * W, BoardX + (N + 1) * W + 1, BoardY + i * W);
-    }/*
-    if (thread)
+    }
     for (int i = 1; i <= N; ++i)
         for (int j = 1; j <= M; ++j)
-        {
-            wxSetMapEvent* event = new wxSetMapEvent(i, j, ((FishTankApp*)wxTheApp)->data->askWhat(i, j));
-            OnSetMap(*event);
-        }*/
+            PaintGrid(i, j);
 }
 
 void GUIFrame::OnStart(wxCommandEvent& WXUNUSED(event))
 {
     ((FishTankApp*)wxTheApp)->thread->Run();
-    //thread -> Run();
 }
 
 void GUIFrame::OnPause(wxCommandEvent& WXUNUSED(event))
@@ -110,33 +105,39 @@ void GUIFrame::OnReset(wxCommandEvent& WXUNUSED(event))
     Refresh();
 }
 
-void GUIFrame::OnSendStatus(wxSendMsgEvent& event)
+void GUIFrame::OnSendStatusBar(wxCommandEvent& event)
 {
-    SetStatusText(event.GetMsg() + '\n');
+    SetStatusText(event.GetString() + '\n');
 }
 
 void GUIFrame::OnSetMap(wxSetMapEvent& event)
 {
+    PaintGrid(event.GetX(), event.GetY());
+}
+
+void GUIFrame::PaintGrid(int x, int y)
+{
     wxClientDC dc(this);
     const int W = BoardLength / (wxMax(N, M) + 2);
-    if (event.GetTarget() == EMPTY)
+    int target = (((FishTankApp*)wxTheApp)->data->askWhat(x, y));
+    if (target == EMPTY)
     {
         dc.SetPen(*wxGREY_PEN);
         dc.SetBrush(*wxGREY_BRUSH);
-        dc.DrawRectangle(BoardX + W * event.GetX() + 1, BoardY + W * event.GetY() + 1, W - 1, W - 1);
+        dc.DrawRectangle(BoardX + W * x + 1, BoardY + W * y + 1, W - 1, W - 1);
     }
-    else if (event.GetTarget() == FOOD)
+    else if (target == FOOD)
     {
         dc.SetPen(*wxGREEN_PEN);
         dc.SetBrush(*wxGREEN_BRUSH);
-        dc.DrawCircle(BoardX + W * event.GetX() + W / 2, BoardY + W * event.GetY() + W / 2, W * 5 / 12);
+        dc.DrawCircle(BoardX + W * x + W / 2, BoardY + W * y + W / 2, W * 5 / 12);
     }
     else
     {
         dc.SetPen(*wxBLUE_PEN);
         dc.SetBrush(*wxBLUE_BRUSH);
-        dc.DrawCircle(BoardX + W * event.GetX() + W / 2, BoardY + W * event.GetY() + W / 2, W * 5 / 12);
-        dc.DrawText(wxString::Format("%d", event.GetTarget()), wxPoint(BoardX + W * event.GetX() + W / 8, BoardY + W * event.GetY() + W / 8));
+        dc.DrawCircle(BoardX + W * x + W / 2, BoardY + W * y + W / 2, W * 5 / 12);
+        dc.DrawText(wxString::Format("%d", target), wxPoint(BoardX + W * x + W / 8, BoardY + W * y + W / 8));
     }
 }
 

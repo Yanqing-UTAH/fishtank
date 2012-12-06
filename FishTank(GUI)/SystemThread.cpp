@@ -10,12 +10,6 @@ using namespace std;
 
 wxThread::ExitCode SystemThread::Entry()
 {
-    for (int i = 1; i <= MAX_PLAYER; ++i)
-    {
-        fish* AI = new TAAI();
-        AI->setHost(this);
-        addAI(AI);
-    }
     play();
     return NULL;
 }
@@ -23,31 +17,42 @@ wxThread::ExitCode SystemThread::Entry()
 SystemThread::SystemThread() : data(((FishTankApp*)wxTheApp)->data), evtHandler(((FishTankApp*)wxTheApp)->watcher->GetEventHandler())
 {
     init();
+    for (int i = 1; i <= MAX_PLAYER; ++i)
+    {
+        fish* AI = new TAAI();
+        AI->setHost(this);
+        addAI(AI);
+    }
 }
 
 void SystemThread::init()
 {
-    fishNum = 0;
+    data->init();
     reviveNum = 0;
     phase = INIT_PHASE;
     round = 0;
-    for (int i = 1; i <= N; ++i)
-        for (int j = 1; j <= M; ++j)
-            data->setMap(i, j, EMPTY);
     srand(time(NULL));
 }
 
 SystemThread::~SystemThread()
 {
-    for (int i = 1; i <= MAX_PLAYER; ++i)
+    for (int i = 1; i <= data->getFishCount(); ++i)
         delete player[i];
+}
+
+void SystemThread::SendLog(const wxString& str)
+{
+    wxCommandEvent* event = new wxCommandEvent(wxEVT_SEND_MSG, SEND_MSG_ID);
+    event->SetString(str);
+    evtHandler->QueueEvent(event);
 }
 
 bool SystemThread::addAI(fish* newAI)
 {
-    if ((fishNum < MAX_PLAYER) && (newAI))
+    if ((data->getFishCount() < MAX_PLAYER) && (newAI))
     {
-        player[++fishNum] = newAI;
+        data->addFish();
+        player[data->getFishCount()] = newAI;
         return true;
     }
     return false;
@@ -65,13 +70,13 @@ void SystemThread::foodRefresh()
         randXY(x, y);
         data->setMap(x, y, FOOD);
     }
-    evtHandler->QueueEvent(new wxSendMsgEvent(wxString::Format("Food refreshed"), wxEVT_SEND_MSG, SEND_MSG_ID));
+    SendLog("Food refreshed");
 }
 
 void SystemThread::fishInit()
 {
     phase = INIT_PHASE;
-    for (int i = 1; i <= fishNum; ++i)
+    for (int i = 1; i <= data->getFishCount(); ++i)
     {
         int x = 0, y = 0;
         randXY(x, y);
@@ -84,23 +89,22 @@ void SystemThread::fishInit()
         data->setMaxHP(i, 0);
         data->setAtt(i, 0);
         data->setSp(i, 0);
-        fishBonus[i] = 0;
         fishKill[i] = 0;
         fishDie[i] = 0;
     }
-    for (int i = 1; i <= fishNum; ++i)
+    for (int i = 1; i <= data->getFishCount(); ++i)
     {
         current = i;
         player[i]->init();
-        evtHandler->QueueEvent(new wxSendMsgEvent(wxString::Format("Fish %d borns at (%d, %d), MaxHP = %d, Sp = %d, Att = %d", i, getX(), getY(), getMaxHP(), getSp(), getAtt()), wxEVT_SEND_MSG, SEND_MSG_ID));
+        SendLog(wxString::Format("Fish %d borns at (%d, %d), MaxHP = %d, Sp = %d, Att = %d", i, getX(), getY(), getMaxHP(), getSp(), getAtt()));
     }
 }
 
 void SystemThread::calcPriority()
 {
-    for (int i = 1; i <= fishNum; ++i)
+    for (int i = 1; i <= data->getFishCount(); ++i)
         sequence[i] = i;
-    sort(1, fishNum);
+    sort(1, data->getFishCount());
 }
 
 void SystemThread::fishRevive()
@@ -116,25 +120,28 @@ void SystemThread::fishRevive()
         data->setMap(x, y, target);
         data->setXY(target, x, y);
         data->setHP(target, larger(data->getMaxHP(target) / 10, 1));
-        evtHandler->QueueEvent(new wxSendMsgEvent(wxString::Format("Fish %d revives at (%d, %d)", target, x, y), wxEVT_SEND_MSG, SEND_MSG_ID));
+        SendLog(wxString::Format("Fish %d revives at (%d, %d)", target, x, y));
     }
     reviveNum = 0;
-    for (int i = 1; i <= fishNum; ++i)
+    for (int i = 1; i <= data->getFishCount(); ++i)
         if (askHP(i) <= 0)
             reviveList[++reviveNum] = i;
 }
 
 void SystemThread::fishPlay()
 {
-    for (int i = 1; i <= fishNum; ++i)
+    for (int i = 1; i <= data->getFishCount(); ++i)
     {
         phase = MAIN_PHASE;
         current = sequence[i];
         if (getHP() > 0)
         {
-            evtHandler->QueueEvent(new wxSendMsgEvent(wxString::Format("Fish %d is in action now", current), wxEVT_SEND_MSG, SEND_MSG_ID));
-            evtHandler->QueueEvent(new wxSendMsgEvent(wxString::Format("Fish %d is in action now", current), wxEVT_SEND_STATUS, SEND_STATUS_ID));
+            SendLog(wxString::Format("Fish %d is in action now", current));
+            wxCommandEvent* event = new wxCommandEvent(wxEVT_SEND_SB, SEND_SB_ID);
+            event->SetString(wxString::Format("Round %d : Fish %d is in action now", round, current));
+            ((FishTankApp*)wxTheApp)->frame->GetEventHandler()->QueueEvent(event);
             player[current]->play();
+            ((FishTankApp*)wxTheApp)->watcher->Refresh();
         }
     }
 }
@@ -151,7 +158,7 @@ void SystemThread::turn()
 {
     if (++round <= GAME_ROUND)
     {
-        evtHandler->QueueEvent(new wxSendMsgEvent(wxString::Format("Round: %d", round), wxEVT_SEND_MSG, SEND_MSG_ID));
+        SendLog(wxString::Format("Round: %d", round));
         if (round % 5 == 1)
             foodRefresh();
         fishRevive();
@@ -164,29 +171,29 @@ bool SystemThread::move(int x, int y)
 {
     if (phase != MAIN_PHASE)
     {
-        evtHandler->QueueEvent(new wxSendMsgEvent(wxString::Format("Fish %d attempts to move from (%d, %d) to (%d, %d)", current, getX(), getY(), x, y), wxEVT_SEND_MSG, SEND_MSG_ID));
-        evtHandler->QueueEvent(new wxSendMsgEvent(wxString::Format("Failed (Cannot move in this phase)"), wxEVT_SEND_MSG, SEND_MSG_ID));
+        SendLog(wxString::Format("Fish %d attempts to move from (%d, %d) to (%d, %d)", current, getX(), getY(), x, y));
+        SendLog("Failed (Cannot move in this phase)");
         return false;
     }
     if (!validCor(x, y))
     {
-        evtHandler->QueueEvent(new wxSendMsgEvent(wxString::Format("Fish %d attempts to move from (%d, %d) to (%d, %d)", current, getX(), getY(), x, y), wxEVT_SEND_MSG, SEND_MSG_ID));
-        evtHandler->QueueEvent(new wxSendMsgEvent(wxString::Format("Failed (Invalid coordinate)"), wxEVT_SEND_MSG, SEND_MSG_ID));
+        SendLog(wxString::Format("Fish %d attempts to move from (%d, %d) to (%d, %d)", current, getX(), getY(), x, y));
+        SendLog("Failed (Invalid coordinate)");
         return false;
     }
     if (askWhat(x, y) != EMPTY)
     {
-        evtHandler->QueueEvent(new wxSendMsgEvent(wxString::Format("Fish %d attempts to move from (%d, %d) to (%d, %d)", current, getX(), getY(), x, y), wxEVT_SEND_MSG, SEND_MSG_ID));
-        evtHandler->QueueEvent(new wxSendMsgEvent(wxString::Format("Failed (Target area is not empty)"), wxEVT_SEND_MSG, SEND_MSG_ID));
+        SendLog(wxString::Format("Fish %d attempts to move from (%d, %d) to (%d, %d)", current, getX(), getY(), x, y));
+        SendLog("Failed (Target area is not empty)");
         return false;
     }
     if (dis(getX(), getY(), x, y) > getSp())
     {
-        evtHandler->QueueEvent(new wxSendMsgEvent(wxString::Format("Fish %d attempts to move from (%d, %d) to (%d, %d)", current, getX(), getY(), x, y), wxEVT_SEND_MSG, SEND_MSG_ID));
-        evtHandler->QueueEvent(new wxSendMsgEvent(wxString::Format("Failed (Out of move range)"), wxEVT_SEND_MSG, SEND_MSG_ID));
+        SendLog(wxString::Format("Fish %d attempts to move from (%d, %d) to (%d, %d)", current, getX(), getY(), x, y));
+        SendLog("Failed (Out of move range)");
         return false;
     }
-    evtHandler->QueueEvent(new wxSendMsgEvent(wxString::Format("Fish %d moves from (%d, %d) to (%d, %d)", current, getX(), getY(), x, y), wxEVT_SEND_MSG, SEND_MSG_ID));
+    SendLog(wxString::Format("Fish %d moves from (%d, %d) to (%d, %d)", current, getX(), getY(), x, y));
     data->setMap(getX(), getY(), EMPTY);
     data->setXY(current, x, y);
     data->setMap(x, y, current);
@@ -198,31 +205,31 @@ bool SystemThread::attack(int x, int y)
 {
     if ((phase != MAIN_PHASE) && (phase != MOVE_PHASE))
     {
-        evtHandler->QueueEvent(new wxSendMsgEvent(wxString::Format("Fish %d attempts to attack (%d, %d)", current, x, y), wxEVT_SEND_MSG, SEND_MSG_ID));
-        evtHandler->QueueEvent(new wxSendMsgEvent(wxString::Format("Failed (Cannot attack in this phase)"), wxEVT_SEND_MSG, SEND_MSG_ID));
+        SendLog(wxString::Format("Fish %d attempts to attack (%d, %d)", current, x, y));
+        SendLog("Failed (Cannot attack in this phase)");
         return false;
     }
     if (!validCor(x, y))
     {
-        evtHandler->QueueEvent(new wxSendMsgEvent(wxString::Format("Fish %d attempts to attack (%d, %d)", current, x, y), wxEVT_SEND_MSG, SEND_MSG_ID));
-        evtHandler->QueueEvent(new wxSendMsgEvent(wxString::Format("Failed (Invalid coordinate)"), wxEVT_SEND_MSG, SEND_MSG_ID));
+        SendLog(wxString::Format("Fish %d attempts to attack (%d, %d)", current, x, y));
+        SendLog("Failed (Invalid coordinate)");
         return false;
     }
     if (dis(getX(), getY(), x, y) != 1)
     {
-        evtHandler->QueueEvent(new wxSendMsgEvent(wxString::Format("Fish %d attempts to attack (%d, %d)", current, x, y), wxEVT_SEND_MSG, SEND_MSG_ID));
-        evtHandler->QueueEvent(new wxSendMsgEvent(wxString::Format("Failed (Out of attack range)"), wxEVT_SEND_MSG, SEND_MSG_ID));
+        SendLog(wxString::Format("Fish %d attempts to attack (%d, %d)", current, x, y));
+        SendLog("Failed (Out of attack range)");
         return false;
     }
     if (askWhat(x, y) == EMPTY)
     {
-        evtHandler->QueueEvent(new wxSendMsgEvent(wxString::Format("Fish %d attempts to attack (%d, %d)", current, x, y), wxEVT_SEND_MSG, SEND_MSG_ID));
-        evtHandler->QueueEvent(new wxSendMsgEvent(wxString::Format("Failed (Target area is empty)"), wxEVT_SEND_MSG, SEND_MSG_ID));
+        SendLog(wxString::Format("Fish %d attempts to attack (%d, %d)", current, x, y));
+        SendLog("Failed (Target area is empty)");
         return false;
     }
     if (askWhat(x, y) == FOOD)
     {
-        evtHandler->QueueEvent(new wxSendMsgEvent(wxString::Format("Fish %d eats food at (%d, %d)", current, x, y), wxEVT_SEND_MSG, SEND_MSG_ID));
+        SendLog(wxString::Format("Fish %d eats food at (%d, %d)", current, x, y));
         data->setMap(x, y, EMPTY);
         increaseHP(larger(getMaxHP() / 10, 2));
         increaseExp(1);
@@ -230,14 +237,14 @@ bool SystemThread::attack(int x, int y)
     else
     {
         int target = askWhat(x, y);
-        evtHandler->QueueEvent(new wxSendMsgEvent(wxString::Format("Fish %d attacks Fish %d at (%d, %d)", current, target, x, y), wxEVT_SEND_MSG, SEND_MSG_ID));
+        SendLog(wxString::Format("Fish %d attacks Fish %d at (%d, %d)", current, target, x, y));
         decreaseHP(target, getAtt());
         if (!askHP(target))
         {
             data->setMap(x, y, EMPTY);
             int targetLevel = data->getLevel(target);
             if ((targetLevel) > getLevel())
-                fishBonus[current] += 2 * (targetLevel - getLevel());
+                data->setScore(current, data->getScore(current) + 2 * (targetLevel - getLevel()));
             increaseExp(larger(1, targetLevel / 2));
             ++fishKill[current];
             ++fishDie[target];
@@ -256,7 +263,7 @@ void SystemThread::increaseHP(int value)
         HP = getMaxHP();
     data->setHP(current, HP);
     if (phase != INIT_PHASE)
-        evtHandler->QueueEvent(new wxSendMsgEvent(wxString::Format("Fish %d's HP increases to %d", current, HP), wxEVT_SEND_MSG, SEND_MSG_ID));
+        SendLog(wxString::Format("Fish %d's HP increases to %d", current, HP));
 }
 
 void SystemThread::decreaseHP(int target, int value)
@@ -267,10 +274,10 @@ void SystemThread::decreaseHP(int target, int value)
     if (HP < 0)
         HP = 0;
     data->setHP(target, HP);
-    evtHandler->QueueEvent(new wxSendMsgEvent(wxString::Format("Fish %d's HP decreases to %d", target, HP), wxEVT_SEND_MSG, SEND_MSG_ID));
+    SendLog(wxString::Format("Fish %d's HP decreases to %d", target, HP));
     if (!HP)
     {
-        evtHandler->QueueEvent(new wxSendMsgEvent(wxString::Format("Fish %d is killed", target), wxEVT_SEND_MSG, SEND_MSG_ID));
+        SendLog(wxString::Format("Fish %d is killed", target));
     }
 }
 
@@ -278,12 +285,13 @@ void SystemThread::increaseExp(int value)
 {
 
     data->setExp(current, getExp() + value);
-    evtHandler->QueueEvent(new wxSendMsgEvent(wxString::Format("Fish %d's Exp increases to %d", current, getExp()), wxEVT_SEND_MSG, SEND_MSG_ID));
+    data->setScore(current, data->getScore(current) + value);
+    SendLog(wxString::Format("Fish %d's Exp increases to %d", current, getExp()));
     while (getExp() >= (2 + getLevel() + 1) * getLevel() / 2)
     {
         data->setLevel(current, getLevel() + 1);
         data->setPoint(current, getPoint() + 3);
-        evtHandler->QueueEvent(new wxSendMsgEvent(wxString::Format("Fish %d's Level is upgraded to %d", current, getLevel()), wxEVT_SEND_MSG, SEND_MSG_ID));
+        SendLog(wxString::Format("Fish %d's Level is upgraded to %d", current, getLevel()));
     }
 }
 
@@ -295,7 +303,7 @@ bool SystemThread::increaseHealth()
         increaseHP(2);
         data->setPoint(current, getPoint() - 1);
         if (phase != INIT_PHASE)
-            evtHandler->QueueEvent(new wxSendMsgEvent(wxString::Format("Fish %d's MaxHP increases to %d", current, getMaxHP()), wxEVT_SEND_MSG, SEND_MSG_ID));
+            SendLog(wxString::Format("Fish %d's MaxHP increases to %d", current, getMaxHP()));
         return true;
     }
     return false;
@@ -308,7 +316,7 @@ bool SystemThread::increaseStrength()
         data->setAtt(current, getAtt() + 1);
         data->setPoint(current, getPoint() - 1);
         if (phase != INIT_PHASE)
-            evtHandler->QueueEvent(new wxSendMsgEvent(wxString::Format("Fish %d's Strength increases to %d", current, getAtt()), wxEVT_SEND_MSG, SEND_MSG_ID));
+            SendLog(wxString::Format("Fish %d's Strength increases to %d", current, getAtt()));
         return true;
     }
     return false;
@@ -321,7 +329,7 @@ bool SystemThread::increaseSpeed()
         data->setSp(current, getSp() + 1);
         data->setPoint(current, getPoint() - 1);
         if (phase != INIT_PHASE)
-            evtHandler->QueueEvent(new wxSendMsgEvent(wxString::Format("Fish %d's Speed increases to %d", current, getSp()), wxEVT_SEND_MSG, SEND_MSG_ID));
+            SendLog(wxString::Format("Fish %d's Speed increases to %d", current, getSp()));
         return true;
     }
     return false;
@@ -382,10 +390,10 @@ void SystemThread::randXY(int& x, int& y)
 void SystemThread::printResult()
 {
     /*
-       for (int i = 1; i <= fishNum; ++i)
+       for (int i = 1; i <= data->getFishCount(); ++i)
            fishRank[i] = i;
        cout << "ID Score  Lv   HP MaxHP  Sp Att Kill Die" << endl;
-       for (int j = 1; j <= fishNum; ++j)
+       for (int j = 1; j <= data->getFishCount(); ++j)
        {
            int i = fishRank[j];
            cout << setw(3) << i << setw(5) << fishExp[i] + fishBonus[i] << setw(4) << fishLevel[i] << setw(5) << fishHP[i] << setw(6) << fishMaxHP[i] << setw(4) << fishSp[i] << setw(4) << fishAtt[i] << setw(5) << fishKill[i] << setw(4) << fishDie[i] << endl;
@@ -444,7 +452,7 @@ int SystemThread::askWhat(int x, int y) const
 }
 int SystemThread::askHP(int id) const
 {
-    if ((id >= 1) && (id <= fishNum))
+    if ((id >= 1) && (id <= data->getFishCount()))
         return data->getHP(id);
     return 0;
 }

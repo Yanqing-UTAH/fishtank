@@ -19,10 +19,10 @@ public:
     void OnResume(wxCommandEvent& event);
     void OnReset(wxCommandEvent& event);
     void OnSetMap(wxSetMapEvent& event);
-    void OnSendMsg(wxSendMsgEvent& event);
-    void OnSendStatus(wxSendMsgEvent& event);
+    void OnSendStatusBar(wxCommandEvent& event);
     void OnPaint(wxPaintEvent& event);
     void OnClose(wxCloseEvent& event);
+    void PaintGrid(int, int);
 private:
     static const int BoardLength = 600;
     static const int BoardX = 15;
