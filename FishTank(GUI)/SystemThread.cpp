@@ -14,7 +14,7 @@ wxThread::ExitCode SystemThread::Entry()
     return NULL;
 }
 
-SystemThread::SystemThread() : data(((FishTankApp*)wxTheApp)->data), evtHandler(((FishTankApp*)wxTheApp)->watcher->GetEventHandler())
+SystemThread::SystemThread() : data(((FishTankApp*)wxTheApp)->data)
 {
     init();
     for (int i = 1; i <= MAX_PLAYER; ++i)
@@ -23,6 +23,11 @@ SystemThread::SystemThread() : data(((FishTankApp*)wxTheApp)->data), evtHandler(
         AI->setHost(this);
         addAI(AI);
     }
+}
+
+void SystemThread::SetHandler(wxEvtHandler* handler)
+{
+    evtHandler = handler;
 }
 
 void SystemThread::init()
@@ -151,7 +156,6 @@ void SystemThread::play()
     fishInit();
     while (round <= GAME_ROUND)
         turn();
-    printResult();
 }
 
 void SystemThread::turn()
@@ -385,19 +389,6 @@ void SystemThread::randXY(int& x, int& y)
     }
     x = x0;
     y = y0;
-}
-
-void SystemThread::printResult()
-{
-    /*
-       for (int i = 1; i <= data->getFishCount(); ++i)
-           fishRank[i] = i;
-       cout << "ID Score  Lv   HP MaxHP  Sp Att Kill Die" << endl;
-       for (int j = 1; j <= data->getFishCount(); ++j)
-       {
-           int i = fishRank[j];
-           cout << setw(3) << i << setw(5) << fishExp[i] + fishBonus[i] << setw(4) << fishLevel[i] << setw(5) << fishHP[i] << setw(6) << fishMaxHP[i] << setw(4) << fishSp[i] << setw(4) << fishAtt[i] << setw(5) << fishKill[i] << setw(4) << fishDie[i] << endl;
-       }*/
 }
 
 int SystemThread::getPoint() const

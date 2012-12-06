@@ -8,28 +8,28 @@
 		<Cursor position="798" topLine="20" />
 	</File>
 	<File name="FishInfo.cpp" open="1" top="0" tabpos="1">
-		<Cursor position="166" topLine="1" />
+		<Cursor position="2910" topLine="94" />
 	</File>
 	<File name="FishInfo.h" open="1" top="0" tabpos="17">
 		<Cursor position="810" topLine="21" />
 	</File>
-	<File name="FishTankApp.cpp" open="1" top="1" tabpos="9">
-		<Cursor position="524" topLine="0" />
+	<File name="FishTankApp.cpp" open="1" top="0" tabpos="9">
+		<Cursor position="725" topLine="3" />
 	</File>
 	<File name="FishTankApp.h" open="1" top="0" tabpos="8">
 		<Cursor position="264" topLine="0" />
 	</File>
 	<File name="GUIFrame.cpp" open="1" top="0" tabpos="7">
-		<Cursor position="11" topLine="0" />
+		<Cursor position="454" topLine="18" />
 	</File>
 	<File name="GUIFrame.h" open="1" top="0" tabpos="6">
 		<Cursor position="667" topLine="12" />
 	</File>
 	<File name="SystemThread.cpp" open="1" top="0" tabpos="2">
-		<Cursor position="231" topLine="15" />
+		<Cursor position="3003" topLine="129" />
 	</File>
 	<File name="SystemThread.h" open="1" top="0" tabpos="3">
-		<Cursor position="721" topLine="27" />
+		<Cursor position="334" topLine="62" />
 	</File>
 	<File name="TAAI.cpp" open="1" top="0" tabpos="13">
 		<Cursor position="0" topLine="0" />
@@ -37,11 +37,11 @@
 	<File name="TAAI.h" open="1" top="0" tabpos="15">
 		<Cursor position="141" topLine="0" />
 	</File>
-	<File name="WatcherFrame.cpp" open="1" top="0" tabpos="12">
-		<Cursor position="1566" topLine="22" />
+	<File name="WatcherFrame.cpp" open="1" top="1" tabpos="12">
+		<Cursor position="2704" topLine="65" />
 	</File>
 	<File name="WatcherFrame.h" open="1" top="0" tabpos="11">
-		<Cursor position="717" topLine="13" />
+		<Cursor position="905" topLine="16" />
 	</File>
 	<File name="fish.cpp" open="1" top="0" tabpos="10">
 		<Cursor position="789" topLine="54" />
@@ -50,6 +50,6 @@
 		<Cursor position="1390" topLine="21" />
 	</File>
 	<File name="utildef.h" open="1" top="0" tabpos="14">
-		<Cursor position="759" topLine="21" />
+		<Cursor position="773" topLine="21" />
 	</File>
 </CodeBlocks_layout_file>

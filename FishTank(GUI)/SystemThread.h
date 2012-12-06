@@ -14,6 +14,7 @@ public:
     virtual ~SystemThread();
     virtual void* Entry();
 
+    void SetHandler(wxEvtHandler* handler);
     bool addAI(fish*);
     void play();
     void turn();
@@ -28,7 +29,6 @@ private:
     void fishPlay();
     void calcPriority();
     void randXY(int&, int&);
-    void printResult();
     void increaseHP(int);
     void decreaseHP(int, int);
     void increaseExp(int);
@@ -77,7 +77,7 @@ public:
     bool increaseSpeed();
 private:
     FishInfo* const data;
-    wxEvtHandler* const evtHandler;
+    wxEvtHandler* evtHandler;
 };
 
 #endif // SystemThread_H

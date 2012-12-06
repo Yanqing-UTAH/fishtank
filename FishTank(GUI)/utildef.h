@@ -26,7 +26,8 @@ enum
     RESET_ID,
     SET_MAP_ID,
     SEND_MSG_ID,
-    SEND_SB_ID
+    SEND_SB_ID,
+    LIST_ID
 };
 
 inline int larger(int a, int b)

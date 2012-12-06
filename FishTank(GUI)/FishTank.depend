@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1354718624 source:e:\fishtank(gui)\fishinfo.cpp
+1354796260 source:e:\fishtank(gui)\fishinfo.cpp
 	"FishInfo.h"
 	"Events.h"
 	"FishTankApp.h"
@@ -7,7 +7,7 @@
 1354718615 e:\fishtank(gui)\fishinfo.h
 	"utildef.h"
 
-1354706712 e:\fishtank(gui)\utildef.h
+1354797136 e:\fishtank(gui)\utildef.h
 	<wx/wxprec.h>
 	<wx/wx.h>
 	<cstdlib>
@@ -2129,7 +2129,7 @@
 1354707276 e:\fishtank(gui)\events.h
 	"utildef.h"
 
-1354640688 source:e:\fishtank(gui)\fishtankapp.cpp
+1354799979 source:e:\fishtank(gui)\fishtankapp.cpp
 	"FishTankApp.h"
 	"GUIFrame.h"
 
@@ -2144,7 +2144,7 @@
 	"Events.h"
 	"FishTankApp.h"
 
-1354715302 e:\fishtank(gui)\systemthread.h
+1354799964 e:\fishtank(gui)\systemthread.h
 	"utildef.h"
 	"FishInfo.h"
 	"Events.h"
@@ -2153,7 +2153,7 @@
 1354706765 source:e:\fishtank(gui)\guiframe.cpp
 	"GUIFrame.h"
 
-1354718993 source:e:\fishtank(gui)\systemthread.cpp
+1354800017 source:e:\fishtank(gui)\systemthread.cpp
 	"SystemThread.h"
 	"FishTankApp.h"
 	"fish.h"
@@ -2242,10 +2242,10 @@
 	"fish.h"
 	<algorithm>
 
-1354715423 source:e:\fishtank(gui)\watcherframe.cpp
+1354719783 source:e:\fishtank(gui)\watcherframe.cpp
 	"WatcherFrame.h"
 
-1354708686 e:\fishtank(gui)\watcherframe.h
+1354799185 e:\fishtank(gui)\watcherframe.h
 	"utildef.h"
 	"Events.h"
 	"FishInfo.h"

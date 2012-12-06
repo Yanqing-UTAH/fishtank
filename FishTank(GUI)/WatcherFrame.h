@@ -17,14 +17,20 @@ public:
                  long style = wxDEFAULT_FRAME_STYLE);
     void OnSendMsg(wxCommandEvent& event);
     void OnClose(wxCloseEvent& event);
+    void OnClickCol(wxListEvent& event);
     void Refresh();
     //void OnChangeData(wxChangeDataEvent& event);
     SystemThread* CreateThread();
     wxTextCtrl *txtctrl;
     wxListCtrl* list;
 private:
-    //int wxCALLBACK SortCmp(wxIntPtr, wxIntPtr, wxIntPtr);
     FishInfo* const data;
+    wxListItem colItems[9];
+    wxListItem colItems_s[9][2];
+    int sortOrder;
+    int sortCol;
+    void SortOnCol(int);
+
 protected:
     DECLARE_EVENT_TABLE()
 };
