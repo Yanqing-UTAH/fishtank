@@ -1,13 +1,12 @@
 # depslib dependency file v1.0
-1354796260 source:e:\fishtank(gui)\fishinfo.cpp
+1354871742 source:e:\fishtank(gui)\fishinfo.cpp
 	"FishInfo.h"
 	"Events.h"
-	"FishTankApp.h"
 
-1354718615 e:\fishtank(gui)\fishinfo.h
+1354871816 e:\fishtank(gui)\fishinfo.h
 	"utildef.h"
 
-1354797136 e:\fishtank(gui)\utildef.h
+1354870021 e:\fishtank(gui)\utildef.h
 	<wx/wxprec.h>
 	<wx/wx.h>
 	<cstdlib>
@@ -2126,40 +2125,48 @@
 
 1341884472 c:\wxwidgets\include\wx\osx\mdi.h
 
-1354707276 e:\fishtank(gui)\events.h
+1354868973 e:\fishtank(gui)\events.h
 	"utildef.h"
 
-1354799979 source:e:\fishtank(gui)\fishtankapp.cpp
+1354868067 source:e:\fishtank(gui)\fishtankapp.cpp
 	"FishTankApp.h"
-	"GUIFrame.h"
 
-1354627392 e:\fishtank(gui)\fishtankapp.h
+1354854032 e:\fishtank(gui)\fishtankapp.h
 	"utildef.h"
 	"FishInfo.h"
-	"WatcherFrame.h"
 	"SystemThread.h"
+	"GUIFrame.h"
 
-1354706769 e:\fishtank(gui)\guiframe.h
+1354870027 e:\fishtank(gui)\guiframe.h
 	"utildef.h"
 	"Events.h"
-	"FishTankApp.h"
+	"FishInfo.h"
+	"SystemThread.h"
+	"wx/listctrl.h"
 
-1354799964 e:\fishtank(gui)\systemthread.h
+1354853793 e:\fishtank(gui)\systemthread.h
 	"utildef.h"
 	"FishInfo.h"
 	"Events.h"
 	"wx/button.h"
 
-1354706765 source:e:\fishtank(gui)\guiframe.cpp
+1354871049 source:e:\fishtank(gui)\guiframe.cpp
 	"GUIFrame.h"
 
-1354800017 source:e:\fishtank(gui)\systemthread.cpp
+1354946990 source:e:\fishtank(gui)\systemthread.cpp
 	"SystemThread.h"
-	"FishTankApp.h"
 	"fish.h"
 	<cstdlib>
 	<ctime>
 	"TAAI.h"
+	"st34.h"
+	"st35.h"
+	"st31.h"
+	"st32.h"
+	"st20.h"
+	"st26.h"
+	"st06.h"
+	"st26(sp).h"
 
 1354538518 e:\fishtank(gui)\fish.h
 	"utildef.h"
@@ -2176,7 +2183,7 @@
 1354540058 source:e:\fishtank(gui)\fish.cpp
 	"fish.h"
 
-1354706723 source:e:\fishtank(gui)\events.cpp
+1354868986 source:e:\fishtank(gui)\events.cpp
 	"Events.h"
 
 1353511080 source:e:\fishtank(gui)\st20.cpp
@@ -2209,10 +2216,10 @@
 1353389200 e:\fishtank(gui)\st32.h
 	"fish.h"
 
-1353743891 source:e:\fishtank(gui)\st34.cpp
+1354943532 source:e:\fishtank(gui)\st34.cpp
 	"st34.h"
 
-1353509950 e:\fishtank(gui)\st34.h
+1354936081 e:\fishtank(gui)\st34.h
 	"fish.h"
 	<cstdlib>
 
@@ -2235,14 +2242,14 @@
 	<iomanip>
 	<iostream>
 
-1353054208 e:\fishtank(gui)\st26.h
+1354946139 e:\fishtank(gui)\st26.h
 	"fish.h"
 
 1353420217 e:\fishtank(gui)\st26(sp).h
 	"fish.h"
 	<algorithm>
 
-1354719783 source:e:\fishtank(gui)\watcherframe.cpp
+1354800653 source:e:\fishtank(gui)\watcherframe.cpp
 	"WatcherFrame.h"
 
 1354799185 e:\fishtank(gui)\watcherframe.h

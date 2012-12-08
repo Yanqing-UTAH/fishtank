@@ -14,12 +14,13 @@ public:
 
 private:
 
-    int calcSafe(int, int);
+    void calcSafe(int, int);
     int evaluate(int, int, int&);
     int eNow(int&, int&, int&);
-    int ePoint(int, int);
+    int evp(int, int);
     void increasePoint();
     void scan();
+    void checkAtt();
     inline int dis(int x1, int y1, int x2, int y2)
     {
         return (std::abs(x1 - x2) + std::abs(y1 - y2));
@@ -41,6 +42,7 @@ private:
     int sx;
     int sy;
     int safe[N+1][M+1];
+    int ff[N+1][M+1];
 
     int fX[MAX_PLAYER+1];
     int fY[MAX_PLAYER+1];

@@ -3,16 +3,15 @@
 
 #include "utildef.h"
 #include "FishInfo.h"
-#include "WatcherFrame.h"
 #include "SystemThread.h"
+#include "GUIFrame.h"
 
 class FishTankApp: public wxApp
 {
     virtual bool OnInit();
 public:
-    wxFrame* frame;
+    GUIFrame* frame;
     FishInfo* data;
-    WatcherFrame* watcher;
     SystemThread* thread;
 };
 

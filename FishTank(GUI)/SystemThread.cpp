@@ -1,25 +1,76 @@
 #include "SystemThread.h"
-#include "FishTankApp.h"
 #include "fish.h"
 
 #include <cstdlib>
 #include <ctime>
 #include "TAAI.h"
+#include "st34.h"
+#include "st35.h"
+#include "st31.h"
+#include "st32.h"
+#include "st20.h"
+#include "st26.h"
+#include "st06.h"
+#include "st26(sp).h"
 
 using namespace std;
 
 wxThread::ExitCode SystemThread::Entry()
 {
+    srand(time(NULL));
     play();
     return NULL;
 }
 
-SystemThread::SystemThread() : data(((FishTankApp*)wxTheApp)->data)
+SystemThread::SystemThread(FishInfo* info) : data(info)
 {
     init();
-    for (int i = 1; i <= MAX_PLAYER; ++i)
+
+    for (int i = 1; i <= 1; ++i)
     {
-        fish* AI = new TAAI();
+        fish* AI = new st34();
+        AI->setHost(this);
+        addAI(AI);
+    }
+    for (int i = 1; i <= 1; ++i)
+    {
+        fish* AI = new st26();
+        AI->setHost(this);
+        addAI(AI);
+    }
+    for (int i = 1; i <= 6; ++i)
+    {
+        fish* AI = new st06();
+        AI->setHost(this);
+        addAI(AI);
+    }
+    for (int i = 1; i <= 6; ++i)
+    {
+        fish* AI = new st20();
+        AI->setHost(this);
+        addAI(AI);
+    }
+    for (int i = 1; i <= 6; ++i)
+    {
+        fish* AI = new st261();
+        AI->setHost(this);
+        addAI(AI);
+    }
+    for (int i = 1; i <= 7; ++i)
+    {
+        fish* AI = new st31();
+        AI->setHost(this);
+        addAI(AI);
+    }
+    for (int i = 1; i <= 6; ++i)
+    {
+        fish* AI = new st32();
+        AI->setHost(this);
+        addAI(AI);
+    }
+    for (int i = 1; i <= 7; ++i)
+    {
+        fish* AI = new st35();
         AI->setHost(this);
         addAI(AI);
     }
@@ -36,7 +87,6 @@ void SystemThread::init()
     reviveNum = 0;
     phase = INIT_PHASE;
     round = 0;
-    srand(time(NULL));
 }
 
 SystemThread::~SystemThread()
@@ -101,8 +151,10 @@ void SystemThread::fishInit()
     {
         current = i;
         player[i]->init();
-        SendLog(wxString::Format("Fish %d borns at (%d, %d), MaxHP = %d, Sp = %d, Att = %d", i, getX(), getY(), getMaxHP(), getSp(), getAtt()));
+        SendLog(wxString::Format("Fish %d borns at (%d, %d), MaxHP = %d, Sp = %d, Att = %d", i, data->getX(current), data->getY(current), data->getMaxHP(current), data->getSp(current), data->getAtt(current)));
     }
+    wxCommandEvent* event = new wxCommandEvent(wxEVT_CHANGE_DATA, CHANGE_DATA_ID);
+    evtHandler->QueueEvent(event);
 }
 
 void SystemThread::calcPriority()
@@ -139,14 +191,30 @@ void SystemThread::fishPlay()
     {
         phase = MAIN_PHASE;
         current = sequence[i];
-        if (getHP() > 0)
+        if (data->getHP(current) > 0)
         {
             SendLog(wxString::Format("Fish %d is in action now", current));
             wxCommandEvent* event = new wxCommandEvent(wxEVT_SEND_SB, SEND_SB_ID);
             event->SetString(wxString::Format("Round %d : Fish %d is in action now", round, current));
-            ((FishTankApp*)wxTheApp)->frame->GetEventHandler()->QueueEvent(event);
+            evtHandler->QueueEvent(event);
+/*
+            if (current == 1)
+            {
+                event = new wxCommandEvent(wxEVT_COMMAND_MENU_SELECTED, PAUSE_ID);
+                evtHandler->QueueEvent(event);
+                Sleep(1000);
+            }*/
+
             player[current]->play();
-            ((FishTankApp*)wxTheApp)->watcher->Refresh();
+            event = new wxCommandEvent(wxEVT_CHANGE_DATA, CHANGE_DATA_ID);
+            evtHandler->QueueEvent(event);
+/*
+            if (current == 1)
+            {
+                event = new wxCommandEvent(wxEVT_COMMAND_MENU_SELECTED, PAUSE_ID);
+                evtHandler->QueueEvent(event);
+                Sleep(1000);
+            }*/
         }
     }
 }
@@ -175,30 +243,30 @@ bool SystemThread::move(int x, int y)
 {
     if (phase != MAIN_PHASE)
     {
-        SendLog(wxString::Format("Fish %d attempts to move from (%d, %d) to (%d, %d)", current, getX(), getY(), x, y));
+        SendLog(wxString::Format("Fish %d attempts to move from (%d, %d) to (%d, %d)", current, data->getX(current), data->getY(current), x, y));
         SendLog("Failed (Cannot move in this phase)");
         return false;
     }
     if (!validCor(x, y))
     {
-        SendLog(wxString::Format("Fish %d attempts to move from (%d, %d) to (%d, %d)", current, getX(), getY(), x, y));
+        SendLog(wxString::Format("Fish %d attempts to move from (%d, %d) to (%d, %d)", current, data->getX(current), data->getY(current), x, y));
         SendLog("Failed (Invalid coordinate)");
         return false;
     }
     if (askWhat(x, y) != EMPTY)
     {
-        SendLog(wxString::Format("Fish %d attempts to move from (%d, %d) to (%d, %d)", current, getX(), getY(), x, y));
+        SendLog(wxString::Format("Fish %d attempts to move from (%d, %d) to (%d, %d)", current, data->getX(current), data->getY(current), x, y));
         SendLog("Failed (Target area is not empty)");
         return false;
     }
-    if (dis(getX(), getY(), x, y) > getSp())
+    if (dis(data->getX(current), data->getY(current), x, y) > data->getSp(current))
     {
-        SendLog(wxString::Format("Fish %d attempts to move from (%d, %d) to (%d, %d)", current, getX(), getY(), x, y));
+        SendLog(wxString::Format("Fish %d attempts to move from (%d, %d) to (%d, %d)", current, data->getX(current), data->getY(current), x, y));
         SendLog("Failed (Out of move range)");
         return false;
     }
-    SendLog(wxString::Format("Fish %d moves from (%d, %d) to (%d, %d)", current, getX(), getY(), x, y));
-    data->setMap(getX(), getY(), EMPTY);
+    SendLog(wxString::Format("Fish %d moves from (%d, %d) to (%d, %d)", current, data->getX(current), data->getY(current), x, y));
+    data->setMap(data->getX(current), data->getY(current), EMPTY);
     data->setXY(current, x, y);
     data->setMap(x, y, current);
     phase = MOVE_PHASE;
@@ -219,7 +287,7 @@ bool SystemThread::attack(int x, int y)
         SendLog("Failed (Invalid coordinate)");
         return false;
     }
-    if (dis(getX(), getY(), x, y) != 1)
+    if (dis(data->getX(current), data->getY(current), x, y) != 1)
     {
         SendLog(wxString::Format("Fish %d attempts to attack (%d, %d)", current, x, y));
         SendLog("Failed (Out of attack range)");
@@ -235,20 +303,20 @@ bool SystemThread::attack(int x, int y)
     {
         SendLog(wxString::Format("Fish %d eats food at (%d, %d)", current, x, y));
         data->setMap(x, y, EMPTY);
-        increaseHP(larger(getMaxHP() / 10, 2));
+        increaseHP(larger(data->getMaxHP(current) / 10, 2));
         increaseExp(1);
     }
     else
     {
         int target = askWhat(x, y);
         SendLog(wxString::Format("Fish %d attacks Fish %d at (%d, %d)", current, target, x, y));
-        decreaseHP(target, getAtt());
+        decreaseHP(target, data->getAtt(current));
         if (!askHP(target))
         {
             data->setMap(x, y, EMPTY);
             int targetLevel = data->getLevel(target);
-            if ((targetLevel) > getLevel())
-                data->setScore(current, data->getScore(current) + 2 * (targetLevel - getLevel()));
+            if ((targetLevel) > data->getLevel(current))
+                data->setScore(current, data->getScore(current) + 2 * (targetLevel - data->getLevel(current)));
             increaseExp(larger(1, targetLevel / 2));
             ++fishKill[current];
             ++fishDie[target];
@@ -262,9 +330,9 @@ void SystemThread::increaseHP(int value)
 {
     if (value <= 0)
         return;
-    int HP = getHP() + value;
-    if (HP > getMaxHP())
-        HP = getMaxHP();
+    int HP = data->getHP(current) + value;
+    if (HP > data->getMaxHP(current))
+        HP = data->getMaxHP(current);
     data->setHP(current, HP);
     if (phase != INIT_PHASE)
         SendLog(wxString::Format("Fish %d's HP increases to %d", current, HP));
@@ -291,23 +359,23 @@ void SystemThread::increaseExp(int value)
     data->setExp(current, getExp() + value);
     data->setScore(current, data->getScore(current) + value);
     SendLog(wxString::Format("Fish %d's Exp increases to %d", current, getExp()));
-    while (getExp() >= (2 + getLevel() + 1) * getLevel() / 2)
+    while (getExp() >= (2 + data->getLevel(current) + 1) * data->getLevel(current) / 2)
     {
-        data->setLevel(current, getLevel() + 1);
-        data->setPoint(current, getPoint() + 3);
-        SendLog(wxString::Format("Fish %d's Level is upgraded to %d", current, getLevel()));
+        data->setLevel(current, data->getLevel(current) + 1);
+        data->setPoint(current, data->getPoint(current) + 3);
+        SendLog(wxString::Format("Fish %d's Level is upgraded to %d", current, data->getLevel(current)));
     }
 }
 
 bool SystemThread::increaseHealth()
 {
-    if (getPoint())
+    if (data->getPoint(current))
     {
-        data->setMaxHP(current, getMaxHP() + 2);
+        data->setMaxHP(current, data->getMaxHP(current) + 2);
         increaseHP(2);
-        data->setPoint(current, getPoint() - 1);
+        data->setPoint(current, data->getPoint(current) - 1);
         if (phase != INIT_PHASE)
-            SendLog(wxString::Format("Fish %d's MaxHP increases to %d", current, getMaxHP()));
+            SendLog(wxString::Format("Fish %d's MaxHP increases to %d", current, data->getMaxHP(current)));
         return true;
     }
     return false;
@@ -315,12 +383,12 @@ bool SystemThread::increaseHealth()
 
 bool SystemThread::increaseStrength()
 {
-    if (getPoint())
+    if (data->getPoint(current))
     {
-        data->setAtt(current, getAtt() + 1);
-        data->setPoint(current, getPoint() - 1);
+        data->setAtt(current, data->getAtt(current) + 1);
+        data->setPoint(current, data->getPoint(current) - 1);
         if (phase != INIT_PHASE)
-            SendLog(wxString::Format("Fish %d's Strength increases to %d", current, getAtt()));
+            SendLog(wxString::Format("Fish %d's Strength increases to %d", current, data->getAtt(current)));
         return true;
     }
     return false;
@@ -328,12 +396,12 @@ bool SystemThread::increaseStrength()
 
 bool SystemThread::increaseSpeed()
 {
-    if (getPoint())
+    if (data->getPoint(current))
     {
-        data->setSp(current, getSp() + 1);
-        data->setPoint(current, getPoint() - 1);
+        data->setSp(current, data->getSp(current) + 1);
+        data->setPoint(current, data->getPoint(current) - 1);
         if (phase != INIT_PHASE)
-            SendLog(wxString::Format("Fish %d's Speed increases to %d", current, getSp()));
+            SendLog(wxString::Format("Fish %d's Speed increases to %d", current, data->getSp(current)));
         return true;
     }
     return false;
@@ -382,7 +450,7 @@ void SystemThread::randXY(int& x, int& y)
 {
     int x0 = rand() % N + 1;
     int y0 = rand() % M + 1;
-    while (askWhat(x0, y0) != EMPTY)
+    while (data->askWhat(x0, y0) != EMPTY)
     {
         x0 = rand() % N + 1;
         y0 = rand() % M + 1;
@@ -393,39 +461,39 @@ void SystemThread::randXY(int& x, int& y)
 
 int SystemThread::getPoint() const
 {
-    return data->getPoint(current);
+    return data->getPoint(current, false);
 }
 int SystemThread::getLevel() const
 {
-    return data->getLevel(current);
+    return data->getLevel(current, false);
 }
 int SystemThread::getExp() const
 {
-    return data->getExp(current);
+    return data->getExp(current, false);
 }
 int SystemThread::getX() const
 {
-    return data->getX(current);
+    return data->getX(current, false);
 }
 int SystemThread::getY() const
 {
-    return data->getY(current);
+    return data->getY(current, false);
 }
 int SystemThread::getHP() const
 {
-    return data->getHP(current);
+    return data->getHP(current, false);
 }
 int SystemThread::getMaxHP() const
 {
-    return data->getMaxHP(current);
+    return data->getMaxHP(current, false);
 }
 int SystemThread::getAtt() const
 {
-    return data->getAtt(current);
+    return data->getAtt(current, false);
 }
 int SystemThread::getSp() const
 {
-    return data->getSp(current);
+    return data->getSp(current, false);
 }
 int SystemThread::getID() const
 {
@@ -436,7 +504,7 @@ int SystemThread::askWhat(int x, int y) const
     if (phase != REVIVE_PHASE)
     {
         if (validCor(x, y))
-            return data->askWhat(x, y);
+            return data->askWhat(x, y, false);
         return EMPTY;
     }
     return EMPTY;
@@ -444,6 +512,6 @@ int SystemThread::askWhat(int x, int y) const
 int SystemThread::askHP(int id) const
 {
     if ((id >= 1) && (id <= data->getFishCount()))
-        return data->getHP(id);
+        return data->getHP(id, false);
     return 0;
 }

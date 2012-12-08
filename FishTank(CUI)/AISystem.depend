@@ -239,3 +239,86 @@
 	<fstream>
 	<iomanip>
 
+1353511080 source:e:\fishtank(cui)\ai\st20.cpp
+	"st20.h"
+	<cstdlib>
+
+1353511080 e:\fishtank(cui)\ai\st20.h
+	"fish.h"
+	<map>
+	<vector>
+
+1353408557 source:e:\fishtank(cui)\ai\st31.cpp
+	"st31.h"
+	<cstdlib>
+	<cmath>
+	<cstring>
+	<algorithm>
+	<vector>
+	<iostream>
+
+1353120600 e:\fishtank(cui)\ai\st31.h
+	"fish.h"
+
+1353389199 source:e:\fishtank(cui)\ai\st32.cpp
+	"fish.h"
+	"st32.h"
+	"cstring"
+	<cstdlib>
+
+1353389200 e:\fishtank(cui)\ai\st32.h
+	"fish.h"
+
+1353068745 source:e:\fishtank(cui)\ai\st35.cpp
+	"st35.h"
+	<cstdlib>
+
+1353054780 e:\fishtank(cui)\ai\st35.h
+	"fish.h"
+	"cstdlib"
+
+1353511844 source:e:\fishtank(cui)\ai\taai.cpp
+	"taai.h"
+	<cstdio>
+
+1353139483 e:\fishtank(cui)\ai\taai.h
+	"fish.h"
+	"cstdlib"
+
+1354933273 source:e:\fishtank(cui)\main.cpp
+	"env.h"
+	"TAAI.h"
+	"st34.h"
+	"st20.h"
+	"st31.h"
+	"st32.h"
+	"st35.h"
+	"st26.h"
+	"st26(sp).h"
+	"st06.h"
+
+1354182363 source:e:\fishtank(cui)\src\env.cpp
+	"env.h"
+	"fish.h"
+	<cstdlib>
+	<ctime>
+	<stdexcept>
+	<iostream>
+	<iomanip>
+
+1353421033 source:e:\fishtank(cui)\src\fish.cpp
+	"fish.h"
+
+1353574458 source:e:\fishtank(cui)\src\logger.cpp
+	"env.h"
+	<iostream>
+	<fstream>
+	<iomanip>
+
+1354947811 source:e:\fishtank(cui)\ai\st34.cpp
+	"st34.h"
+
+1354936081 e:\fishtank(cui)\ai\st34.h
+	"fish.h"
+	<cstdlib>
+

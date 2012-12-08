@@ -9,7 +9,7 @@
 class SystemThread : public wxThread
 {
 public:
-    SystemThread();
+    SystemThread(FishInfo*);
     void init();
     virtual ~SystemThread();
     virtual void* Entry();

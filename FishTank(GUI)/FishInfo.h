@@ -8,30 +8,31 @@ class FishInfo
 public:
     FishInfo();
     ~FishInfo();
-    int getPoint(int) const;
-    int getLevel(int) const;
-    int getExp(int) const;
-    int getX(int) const;
-    int getY(int) const;
-    int getHP(int) const;
-    int getMaxHP(int) const;
-    int getAtt(int) const;
-    int getSp(int) const;
-    int getScore(int) const;
-    int getFishCount() const;
-    int askWhat(int, int) const;
+    void SetHandler(wxEvtHandler* handler);
+    int getPoint(int, bool = true) const;
+    int getLevel(int, bool = true) const;
+    int getExp(int, bool = true) const;
+    int getX(int, bool = true) const;
+    int getY(int, bool = true) const;
+    int getHP(int, bool = true) const;
+    int getMaxHP(int, bool = true) const;
+    int getAtt(int, bool = true) const;
+    int getSp(int, bool = true) const;
+    int getScore(int, bool = true) const;
+    int getFishCount(bool = true) const;
+    int askWhat(int, int, bool = true) const;
 
-    void setMap(int, int, int);
-    void setPoint(int, int);
-    void setLevel(int, int);
-    void setExp(int, int);
-    void setXY(int, int, int);
-    void setHP(int, int);
-    void setMaxHP(int, int);
-    void setAtt(int, int);
-    void setSp(int, int);
-    void setScore(int, int);
-    void addFish();
+    void setMap(int, int, int, bool = true);
+    void setPoint(int, int, bool = true);
+    void setLevel(int, int, bool = true);
+    void setExp(int, int, bool = true);
+    void setXY(int, int, int, bool = true);
+    void setHP(int, int, bool = true);
+    void setMaxHP(int, int, bool = true);
+    void setAtt(int, int, bool = true);
+    void setSp(int, int, bool = true);
+    void setScore(int, int, bool = true);
+    void addFish(bool = true);
     void init();
 
 private:
@@ -53,6 +54,7 @@ private:
 
 private:
     wxMutex* lock;
+    wxEvtHandler* evtHandler;
 };
 
 #endif // FISHINFO_H

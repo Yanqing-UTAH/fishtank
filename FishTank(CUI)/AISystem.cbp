@@ -7,8 +7,8 @@
 		<Option compiler="gcc" />
 		<Build>
 			<Target title="Release">
-				<Option output="bin\Release\AISystem" prefix_auto="1" extension_auto="1" />
-				<Option object_output="obj\Release\" />
+				<Option output="bin/Release/AISystem" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Release/" />
 				<Option type="1" />
 				<Option compiler="gcc" />
 				<Compiler>
@@ -24,30 +24,30 @@
 		<Compiler>
 			<Add option="-Wall" />
 		</Compiler>
-		<Unit filename="AI\TAAI.cpp" />
-		<Unit filename="AI\TAAI.h" />
-		<Unit filename="AI\st20.cpp" />
-		<Unit filename="AI\st20.h" />
-		<Unit filename="AI\st26(sp).h" />
-		<Unit filename="AI\st26.h" />
-		<Unit filename="AI\st31.cpp" />
-		<Unit filename="AI\st31.h" />
-		<Unit filename="AI\st32.cpp" />
-		<Unit filename="AI\st32.h" />
-		<Unit filename="AI\st34.cpp" />
-		<Unit filename="AI\st34.h" />
-		<Unit filename="AI\st35.cpp" />
-		<Unit filename="AI\st35.h" />
-		<Unit filename="include\env.h" />
-		<Unit filename="include\fish.h" />
-		<Unit filename="include\utildef.h" />
+		<Unit filename="AI/TAAI.cpp" />
+		<Unit filename="AI/TAAI.h" />
+		<Unit filename="AI/st20.cpp" />
+		<Unit filename="AI/st20.h" />
+		<Unit filename="AI/st26(sp).h" />
+		<Unit filename="AI/st26.h" />
+		<Unit filename="AI/st31.cpp" />
+		<Unit filename="AI/st31.h" />
+		<Unit filename="AI/st32.cpp" />
+		<Unit filename="AI/st32.h" />
+		<Unit filename="AI/st34.cpp" />
+		<Unit filename="AI/st34.h" />
+		<Unit filename="AI/st35.cpp" />
+		<Unit filename="AI/st35.h" />
+		<Unit filename="include/env.h" />
+		<Unit filename="include/fish.h" />
+		<Unit filename="include/utildef.h" />
 		<Unit filename="main.cpp" />
-		<Unit filename="src\env.cpp" />
-		<Unit filename="src\fish.cpp" />
-		<Unit filename="src\logger.cpp" />
+		<Unit filename="src/env.cpp" />
+		<Unit filename="src/fish.cpp" />
 		<Extensions>
 			<code_completion />
 			<debugger />
+			<envvars />
 		</Extensions>
 	</Project>
 </CodeBlocks_project_file>
