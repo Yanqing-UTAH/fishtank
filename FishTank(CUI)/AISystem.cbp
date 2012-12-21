@@ -24,20 +24,12 @@
 		<Compiler>
 			<Add option="-Wall" />
 		</Compiler>
-		<Unit filename="AI/TAAI.cpp" />
-		<Unit filename="AI/TAAI.h" />
-		<Unit filename="AI/st20.cpp" />
-		<Unit filename="AI/st20.h" />
-		<Unit filename="AI/st26(sp).h" />
-		<Unit filename="AI/st26.h" />
-		<Unit filename="AI/st31.cpp" />
-		<Unit filename="AI/st31.h" />
-		<Unit filename="AI/st32.cpp" />
-		<Unit filename="AI/st32.h" />
-		<Unit filename="AI/st34.cpp" />
-		<Unit filename="AI/st34.h" />
-		<Unit filename="AI/st35.cpp" />
-		<Unit filename="AI/st35.h" />
+		<Unit filename="AI/st01.cpp" />
+		<Unit filename="AI/st01.h" />
+		<Unit filename="AI/st02.cpp" />
+		<Unit filename="AI/st02.h" />
+		<Unit filename="AI/st03.cpp" />
+		<Unit filename="AI/st03.h" />
 		<Unit filename="include/env.h" />
 		<Unit filename="include/fish.h" />
 		<Unit filename="include/utildef.h" />
