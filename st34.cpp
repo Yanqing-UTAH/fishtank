@@ -255,7 +255,7 @@ int st34::evp(int x, int y)
         else if ((askHP(target) > getAtt() * 2) && (askHP(target) < getAtt() * 3) && (getHP() > askHP(target)) && (getHP() > getAtt() * 2) && (getLevel() >= 6))
             value += (2 * getAtt());
         if ((askHP(target) <= getAtt() * 3) && (getLevel() >= 4) && (fDie[getID()] * 2 <= fDie[target]) && (getHP() >= getMaxHP() / 2))
-            value += (60 + 4 * (fSp[target] * 2 + fMaxHP[target]));
+            value += (50 + 6 * (fSp[target] * 2 + fMaxHP[target]));
     }
     int sp = getSp();
     if (sp >= x)
@@ -292,12 +292,10 @@ void st34::increasePoint()
     {
         if ((getHP() <= getAtt() * 3) || (getMaxHP() <= lv * 5 / 2) || (fDie[getID()] >= lv / 2))
             increaseHealth();
-        else if (getAtt() <= lv * 2 / 5)
+        else if ((getAtt() <= getMaxHP() / 10) && (getAtt() <= 22))
             increaseStrength();
         else if ((getSp() < (N + M - 2) / 2) && (getSp() <= lv))
             increaseSpeed();
-        else if (getAtt() < getMaxHP() * 2 / 5)
-            increaseStrength();
         else increaseHealth();
     }
 }
