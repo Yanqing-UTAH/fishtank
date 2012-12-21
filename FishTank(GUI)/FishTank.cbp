@@ -75,23 +75,14 @@
 		<Unit filename="GUIFrame.h" />
 		<Unit filename="SystemThread.cpp" />
 		<Unit filename="SystemThread.h" />
-		<Unit filename="TAAI.cpp" />
-		<Unit filename="TAAI.h" />
 		<Unit filename="fish.cpp" />
 		<Unit filename="fish.h" />
-		<Unit filename="st06.h" />
-		<Unit filename="st20.cpp" />
-		<Unit filename="st20.h" />
-		<Unit filename="st26(sp).h" />
-		<Unit filename="st26.h" />
-		<Unit filename="st31.cpp" />
-		<Unit filename="st31.h" />
-		<Unit filename="st32.cpp" />
-		<Unit filename="st32.h" />
-		<Unit filename="st34.cpp" />
-		<Unit filename="st34.h" />
-		<Unit filename="st35.cpp" />
-		<Unit filename="st35.h" />
+		<Unit filename="st01.cpp" />
+		<Unit filename="st01.h" />
+		<Unit filename="st02.cpp" />
+		<Unit filename="st02.h" />
+		<Unit filename="st03.cpp" />
+		<Unit filename="st03.h" />
 		<Unit filename="utildef.h" />
 		<Extensions>
 			<code_completion />

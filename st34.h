@@ -1,5 +1,5 @@
-#ifndef ST34_H
-#define ST34_H
+#ifndef st34_H
+#define st34_H
 
 #include "fish.h"
 #include <cstdlib>

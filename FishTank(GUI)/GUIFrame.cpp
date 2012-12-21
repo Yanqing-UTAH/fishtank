@@ -7,11 +7,14 @@ BEGIN_EVENT_TABLE(GUIFrame, wxFrame)
     EVT_MENU(START_ID, GUIFrame::OnStart)
     EVT_MENU(PAUSE_ID, GUIFrame::OnPause)
     EVT_MENU(RESUME_ID, GUIFrame::OnResume)
-    EVT_MENU(STOP_ID, GUIFrame::OnStop)
+    EVT_COMMAND(START_ID, wxEVT_COMMAND_BUTTON_CLICKED, GUIFrame::OnStart)
+    EVT_COMMAND(PAUSE_ID, wxEVT_COMMAND_BUTTON_CLICKED, GUIFrame::OnPause)
+    EVT_COMMAND(RESUME_ID, wxEVT_COMMAND_BUTTON_CLICKED, GUIFrame::OnResume)
     EVT_SET_MAP(SET_MAP_ID, GUIFrame::OnSetMap)
     EVT_COMMAND(SEND_SB_ID, wxEVT_SEND_SB, GUIFrame::OnSendStatusBar)
     EVT_COMMAND(SEND_MSG_ID, wxEVT_SEND_MSG, GUIFrame::OnSendMsg)
     EVT_COMMAND(CHANGE_DATA_ID, wxEVT_CHANGE_DATA, GUIFrame::OnRefreshList)
+    EVT_COMMAND(GAME_OVER_ID, wxEVT_GAME_OVER, GUIFrame::OnGameOver)
     EVT_LIST_COL_CLICK(LIST_ID, GUIFrame::OnClickCol)
 END_EVENT_TABLE()
 
@@ -25,7 +28,6 @@ GUIFrame::GUIFrame(FishInfo* info, SystemThread* env, const wxString& title, con
     menuFile -> Append(START_ID, wxT("&Start\tCtrl-S"), wxT("Start a new game"));
     menuFile -> Append(PAUSE_ID, wxT("&Pause\tCtrl-P"), wxT("Pause current game"));
     menuFile -> Append(RESUME_ID, wxT("&Resume\tCtrl-R"), wxT("Resume current game"));
-    menuFile -> Append(STOP_ID, wxT("S&top\tCtrl-T"), wxT("Stop the game"));
     menuFile -> AppendSeparator();
     menuFile -> Append(wxID_EXIT, wxT("E&xit\tAlt-X"), wxT("Quit"));
     wxMenu* menuHelp = new wxMenu;
@@ -47,7 +49,7 @@ GUIFrame::GUIFrame(FishInfo* info, SystemThread* env, const wxString& title, con
 
     txtctrl->SetFocus();
 
-    list = new wxListCtrl(this, LIST_ID, wxDefaultPosition, wxSize(430, 435), wxLC_REPORT | wxLC_SINGLE_SEL);
+    list = new wxListCtrl(this, LIST_ID, wxDefaultPosition, wxSize(430, 390), wxLC_REPORT | wxLC_SINGLE_SEL);
 
     colItems[0].SetText("  ID");
     colItems_s[0][0].SetText("¨‹ID");
@@ -119,8 +121,21 @@ GUIFrame::GUIFrame(FishInfo* info, SystemThread* env, const wxString& title, con
             list->SetItem(i - 1, j, "0");
     }
 
+
+    btnStart = new wxButton(this, START_ID, wxT("Start"));
+    btnPause = new wxButton(this, PAUSE_ID, wxT("Pause"));
+    btnResume = new wxButton(this, RESUME_ID, wxT("Resume"));
+    btnPause->Enable(false);
+    btnResume->Enable(false);
+
+    wxStaticBoxSizer* btnSizer = new wxStaticBoxSizer(new wxStaticBox(this, wxID_ANY, wxT("Game Control")), wxHORIZONTAL);
+    btnSizer->Add(btnStart, wxSizerFlags().Border(wxALL, 10));
+    btnSizer->Add(btnPause, wxSizerFlags(0).Border(wxALL, 10));
+    btnSizer->Add(btnResume, wxSizerFlags(0).Border(wxALL, 10));
+
     wxBoxSizer* rSizer = new wxBoxSizer(wxVERTICAL);
     rSizer->Add(430, BoardY);
+    rSizer->Add(btnSizer, wxSizerFlags(1).Expand());
     rSizer->Add(list);
     rSizer->Add(txtctrl);
     wxBoxSizer* sizer = new wxBoxSizer(wxHORIZONTAL);
@@ -173,24 +188,35 @@ void GUIFrame::OnPaint(wxPaintEvent& event)
 
 void GUIFrame::OnStart(wxCommandEvent& WXUNUSED(event))
 {
-    thread->Run();
+    if ((thread) && (!thread->IsRunning()))
+    {
+        thread->Run();
+        btnStart->Enable(false);
+        btnPause->Enable(true);
+        btnResume->Enable(false);
+        SortOnCol(8);
+    }
 }
 
 void GUIFrame::OnPause(wxCommandEvent& WXUNUSED(event))
 {
     if (thread->IsRunning())
+    {
         thread->Pause();
+        btnPause->Enable(false);
+        btnResume->Enable(true);
+    }
+
 }
 
 void GUIFrame::OnResume(wxCommandEvent& WXUNUSED(event))
 {
     if (thread->IsPaused())
+    {
         thread->Resume();
-}
-
-void GUIFrame::OnStop(wxCommandEvent& WXUNUSED(event))
-{
-    thread->Pause();
+        btnPause->Enable(true);
+        btnResume->Enable(false);
+    }
 }
 
 void GUIFrame::OnSendStatusBar(wxCommandEvent& event)
@@ -232,6 +258,12 @@ void GUIFrame::PaintGrid(int x, int y)
 void GUIFrame::OnSendMsg(wxCommandEvent& event)
 {
     txtctrl->AppendText(event.GetString() + '\n');
+}
+
+void GUIFrame::OnGameOver(wxCommandEvent& WXUNUSED(event))
+{
+    btnPause->Enable(false);
+    btnResume->Enable(false);
 }
 
 void GUIFrame::OnRefreshList(wxCommandEvent& WXUNUSED(event))

@@ -23,12 +23,12 @@ enum
     START_ID = 1000,
     PAUSE_ID,
     RESUME_ID,
-    STOP_ID,
     SET_MAP_ID,
     SEND_MSG_ID,
     SEND_SB_ID,
     LIST_ID,
-    CHANGE_DATA_ID
+    CHANGE_DATA_ID,
+    GAME_OVER_ID
 };
 
 inline int larger(int a, int b)

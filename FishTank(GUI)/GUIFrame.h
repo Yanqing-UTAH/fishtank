@@ -6,6 +6,7 @@
 #include "FishInfo.h"
 #include "SystemThread.h"
 #include "wx/listctrl.h"
+#include "wx/button.h"
 
 class GUIFrame: public wxFrame
 {
@@ -21,13 +22,13 @@ public:
     void OnStart(wxCommandEvent& event);
     void OnPause(wxCommandEvent& event);
     void OnResume(wxCommandEvent& event);
-    void OnStop(wxCommandEvent& event);
     void OnSetMap(wxSetMapEvent& event);
     void OnSendStatusBar(wxCommandEvent& event);
     void OnPaint(wxPaintEvent& event);
     void OnSendMsg(wxCommandEvent& event);
     void OnClickCol(wxListEvent& event);
     void OnRefreshList(wxCommandEvent& event);
+    void OnGameOver(wxCommandEvent& event);
     void PaintGrid(int, int);
 private:
     static const int BoardLength = 600;
@@ -35,10 +36,13 @@ private:
     static const int BoardY = 15;
     FishInfo* const data;
     SystemThread* const thread;
-    wxTextCtrl *txtctrl;
+    wxTextCtrl* txtctrl;
     wxListCtrl* list;
     wxListItem colItems[9];
     wxListItem colItems_s[9][2];
+    wxButton* btnStart;
+    wxButton* btnPause;
+    wxButton* btnResume;
     int sortOrder;
     int sortCol;
     void SortOnCol(int);

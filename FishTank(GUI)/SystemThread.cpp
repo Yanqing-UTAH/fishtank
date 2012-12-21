@@ -3,15 +3,9 @@
 
 #include <cstdlib>
 #include <ctime>
-#include "TAAI.h"
-#include "st34.h"
-#include "st35.h"
-#include "st31.h"
-#include "st32.h"
-#include "st20.h"
-#include "st26.h"
-#include "st06.h"
-#include "st26(sp).h"
+#include "st01.h"
+#include "st02.h"
+#include "st03.h"
 
 using namespace std;
 
@@ -25,55 +19,15 @@ wxThread::ExitCode SystemThread::Entry()
 SystemThread::SystemThread(FishInfo* info) : data(info)
 {
     init();
-
-    for (int i = 1; i <= 1; ++i)
-    {
-        fish* AI = new st34();
-        AI->setHost(this);
-        addAI(AI);
-    }
-    for (int i = 1; i <= 1; ++i)
-    {
-        fish* AI = new st26();
-        AI->setHost(this);
-        addAI(AI);
-    }
-    for (int i = 1; i <= 6; ++i)
-    {
-        fish* AI = new st06();
-        AI->setHost(this);
-        addAI(AI);
-    }
-    for (int i = 1; i <= 6; ++i)
-    {
-        fish* AI = new st20();
-        AI->setHost(this);
-        addAI(AI);
-    }
-    for (int i = 1; i <= 6; ++i)
-    {
-        fish* AI = new st261();
-        AI->setHost(this);
-        addAI(AI);
-    }
-    for (int i = 1; i <= 7; ++i)
-    {
-        fish* AI = new st31();
-        AI->setHost(this);
-        addAI(AI);
-    }
-    for (int i = 1; i <= 6; ++i)
-    {
-        fish* AI = new st32();
-        AI->setHost(this);
-        addAI(AI);
-    }
-    for (int i = 1; i <= 7; ++i)
-    {
-        fish* AI = new st35();
-        AI->setHost(this);
-        addAI(AI);
-    }
+    fish* AI = new st01();
+    AI->setHost(this);
+    addAI(AI);
+    AI = new st02();
+    AI->setHost(this);
+    addAI(AI);
+    AI = new st03();
+    AI->setHost(this);
+    addAI(AI);
 }
 
 void SystemThread::SetHandler(wxEvtHandler* handler)
@@ -197,24 +151,9 @@ void SystemThread::fishPlay()
             wxCommandEvent* event = new wxCommandEvent(wxEVT_SEND_SB, SEND_SB_ID);
             event->SetString(wxString::Format("Round %d : Fish %d is in action now", round, current));
             evtHandler->QueueEvent(event);
-/*
-            if (current == 1)
-            {
-                event = new wxCommandEvent(wxEVT_COMMAND_MENU_SELECTED, PAUSE_ID);
-                evtHandler->QueueEvent(event);
-                Sleep(1000);
-            }*/
-
             player[current]->play();
             event = new wxCommandEvent(wxEVT_CHANGE_DATA, CHANGE_DATA_ID);
             evtHandler->QueueEvent(event);
-/*
-            if (current == 1)
-            {
-                event = new wxCommandEvent(wxEVT_COMMAND_MENU_SELECTED, PAUSE_ID);
-                evtHandler->QueueEvent(event);
-                Sleep(1000);
-            }*/
         }
     }
 }
@@ -224,6 +163,11 @@ void SystemThread::play()
     fishInit();
     while (round <= GAME_ROUND)
         turn();
+    SendLog(wxT("Game Over!"));
+    wxCommandEvent* event = new wxCommandEvent(wxEVT_SEND_SB, SEND_SB_ID);
+    event->SetString(wxT("Game Over"));
+    evtHandler->QueueEvent(event);
+    evtHandler->QueueEvent(new wxCommandEvent(wxEVT_GAME_OVER, GAME_OVER_ID));
 }
 
 void SystemThread::turn()

@@ -38,9 +38,11 @@ void st34::play()
         increasePoint();
     scan();
     int x0 = 0, y0 = 0, a = -1;
+
     for (int x = 1; x <= N; ++x)
         for (int y = 1; y <= M; ++y)
             calcSafe(x, y);
+
     if (eNow(x0, y0, a) > 0)
         if ((x0 >= 1) && (x0 <= N) && (y0 >= 1) && (y0 <= N))
             if (move(x0, y0))
@@ -140,7 +142,7 @@ int st34::eNow(int& dx, int& dy, int& da)
         for (int y = 1; y <= M; ++y)
             if ((dis(x, y) <= sp) && (askWhat(x, y) == EMPTY))
             {
-                int value = evaluate(x, y, ta) - safe[x][y] * (fDie[getID()] / 4 + 1) * getMaxHP() / getHP() + ff[x][y] * 4 / N / M;
+                int value = evaluate(x, y, ta) - safe[x][y] * (fDie[getID()] / 4 + 1) + ff[x][y];
                 if (value > maxv)
                 {
                     maxv = value;
@@ -156,27 +158,21 @@ void st34::calcSafe(int i, int j)
 {
     int res = 0;
     int res2 = 0;
-    bool fb = false;
+    int di = 0;
     for (int x = 1; x <= N; ++x)
         for (int y = 1; y <= M; ++y)
         {
             int d = dis(x, y, i, j);
+            if (d <= getSp() * 2)
+                ++di;
             if ((isEnemy(askWhat(x, y))))
             {
                 int target = askWhat(x, y);
                 if (getLevel() >= 4)
                 {
-                    int cdd = fDie[getID()] - fDie[target] + (fMaxHP[target] / 2 + fSp[target]) / 2;
+                    int cdd = (fMaxHP[target] / 2 + fSp[target]) / 3 - fDie[target];
                     if ((fSp[target] >= d) && (cdd > 0))
-                    {
-                        if (!fb)
-                        {
-                            fb = true;
-                            res += cdd;
-                        }
-                        else
-                            res += 2 * cdd;
-                    }
+                        res += cdd;
                 }
                 else
                 {
@@ -198,19 +194,22 @@ void st34::calcSafe(int i, int j)
                     }
                 }
             }
-            if (d <= getSp() / 2)
-                res2 += evp(x, y) * 2;
-            else if (d <= getSp())
-                res2 += evp(x, y);
-            else if (d <= getSp() * 3 / 2)
-                res2 += evp(x, y) * 2 / 3;
-            else if (d <= getSp() * 2)
-                res2 += evp(x, y) / 2;
+            int r = evp(x, y);
+            if (r > 0)
+            {
+                if (d <= getSp() / 2)
+                    res2 += r * 2;
+                else if (d <= getSp())
+                    res2 += r * 3 / 2;
+                else if (d <= getSp() * 3)
+                    res2 += r * 2 / 3;
+                else if (d <= getSp() * 2)
+                    res2 += (r == 1 ? 1 : r / 2);
+            }
         }
     res = res * getMaxHP() / getHP();
-    res2 = res2;
     safe[i][j] = res;
-    ff[i][j] = res2;
+    ff[i][j] = res2 / di;
 }
 
 int st34::evaluate(int x, int y, int& da)
@@ -242,7 +241,7 @@ int st34::evp(int x, int y)
         value += 100 / getLevel() + 120 - getLevel();
         value += 2 * (100 - getLevel()) / (nextLevelExp() - getExp());
         value += 15 * getMaxHP() * getMaxHP() / getHP() / getHP();
-        value = value * 6 / getLevel();
+        value = value * 6 / getLevel() + 1;
     }
     else if (isEnemy(target))
     {
@@ -255,17 +254,20 @@ int st34::evp(int x, int y)
         else if ((askHP(target) > getAtt() * 2) && (askHP(target) < getAtt() * 3) && (getHP() > askHP(target)) && (getHP() > getAtt() * 2) && (getLevel() >= 6))
             value += (2 * getAtt());
         if ((askHP(target) <= getAtt() * 3) && (getLevel() >= 4) && (fDie[getID()] * 2 <= fDie[target]) && (getHP() >= getMaxHP() / 2))
-            value += (50 + 6 * (fSp[target] * 2 + fMaxHP[target]));
+            value += (50 + 5 * (fSp[target] * 2 + fMaxHP[target]));
     }
     int sp = getSp();
+    int tmpv = value;
     if (sp >= x)
-        value -= ((sp + 1 - x) * 3 / 2);
+           value -= ((sp + 1 - x) * 3 / 2);
     if (sp >= y)
         value -= ((sp + 1 - y) * 3 / 2);
     if (x + sp > N)
         value -= ((x + sp - N) * 3 / 2);
     if (y + sp > M)
         value -= ((y + sp - M) * 3 / 2);
+    if ((value < 0) && (tmpv >= 0))
+        value = 0;
     return value;
 }
 
